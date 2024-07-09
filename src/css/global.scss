@@ -1,0 +1,72 @@
+// 类名：.g-[p1][p2]-[p3]格式，其中p1、p2、p3是变量，p1可以是m/p，p2可以是t/r/b/l，p3可以是base/xs/sm/md/lg/xl
+// 值： 组件库相应尺寸内边距
+// 例子: .g-mt-base的值为margin-top: 4px;
+$names: (
+  (m, margin),
+  (p, padding),
+);
+$positions: (
+  (t, top),
+  (r, right),
+  (b, bottom),
+  (l, left),
+);
+$size-value: (
+  (base, 4px),
+  (xs, 8px),
+  (sm, 12px),
+  (md, 16px),
+  (lg, 24px),
+  (xl, 32px),
+);
+
+@each $name-abb, $name in $names {
+  @each $positon-abb, $positon in $positions {
+    @each $size, $value in $size-value {
+      .g-#{$name-abb}-#{$size} {
+        #{$name}: $value !important;
+      };
+      .g-#{$name-abb}#{$positon-abb}-#{$size} {
+        #{$name}-#{$positon}: $value !important;
+      };
+      .g-n-#{$name-abb} {
+        #{$name}: 0 !important;
+      };
+      .g-n-#{$name-abb}#{$positon-abb} {
+        #{$name}-#{$positon}: 0 !important;
+      };
+    }
+  }
+}
+
+// 清除浮动
+.g-clearfix::before,
+.g-clearfix::after {
+  display: block;
+  content: "";
+}
+
+.g-clearfix::after {
+  clear: both;
+}
+
+.g-clearfix {
+  zoom: 1;
+}
+
+// 单行文本超出省略
+.g-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// 利用background-image等比缩放图片
+.g-zoomimg {
+  width: 100%;
+  height: 0;
+  overflow: hidden;
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-size: cover;
+}

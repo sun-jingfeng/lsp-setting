@@ -1,0 +1,29 @@
+@mixin vue-transition($time: 0.5s) {
+  > .v-enter-active,
+  > .v-leave-active {
+    transition: opacity $time ease;
+  }
+
+  > .v-enter-from,
+  > .v-leave-to {
+    opacity: 0;
+  }
+}
+
+@mixin vue-transition-group($time: 0.5s, $translateX: 30px ){
+  .v-move,
+  .v-enter-active,
+  .v-leave-active {
+    transition: all $time ease;
+  }
+
+  .v-enter-from,
+  .v-leave-to {
+    opacity: 0;
+    transform: translateX($translateX);
+  }
+
+  .v-leave-active {
+    position: absolute;
+  }
+}
