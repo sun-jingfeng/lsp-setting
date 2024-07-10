@@ -1,8 +1,18 @@
 <template>
   <div class="layout">
     <div class="header">
-      <img src="./images/logo.png" />
-      <h2 class="g-ml-base">{{ CONFIG.appName }}</h2>
+      <div class="title">
+        <img src="./images/logo.png" />
+        <div>
+          <img src="./images/title.png" />
+          <p>{{ CONFIG.appName }}</p>
+        </div>
+      </div>
+      <Navigation />
+      <div class="bottom">
+        <img src="./images/home.png" />
+        <span>回到首页</span>
+      </div>
     </div>
     <div class="main">
       <router-view v-slot="{ Component, route }">
@@ -18,24 +28,52 @@
 
 <script setup lang="ts">
 import { CONFIG } from '@/common/const'
+import { RouterView } from 'vue-router'
+import Navigation from './Navigation/Navigation.vue'
 </script>
 
 <style scoped lang="scss">
 .layout {
+  display: flex;
   height: 100%;
 
   > .header {
     display: flex;
-    align-items: center;
-    height: 60px;
-    padding: 0 40px;
-    line-height: 60px;
-    color: var(--el-color-white);
-    background-color: var(--el-color-primary);
+    flex-direction: column;
+    width: 230px;
+    background-color: var(--g-bg-2);
+
+    > .title {
+      display: flex;
+      align-items: center;
+      height: 90px;
+      padding: 0 12px;
+      font-size: 24px;
+
+      > img {
+        margin-right: 10px;
+      }
+    }
+
+    > .bottom {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px 0;
+      color: var(--g-color-3);
+      letter-spacing: 8px;
+      cursor: pointer;
+
+      > img {
+        margin-right: 8px;
+      }
+    }
   }
 
   > .main {
-    height: calc(100% - 60px);
+    flex: 1;
+    width: 0;
+    padding: 16px;
   }
 }
 </style>

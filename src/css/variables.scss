@@ -1,11 +1,9 @@
 :root {
-  /* 字体 */
-  --g-font-family: '苹方-简', 'Microsoft YaHei', '微软雅黑', helvetica, arial, sans-serif; // 默认字体
-
-  /* 文字颜色 */
-  --g-color: #484949; // 默认文字颜色
-  --g-white: #fff; // 白色
-
-  /* 背景色 */
-  --g-bg: #f5f6fa; // 默认背景
+  --g-font-family: '苹方-简', 'Microsoft YaHei', '微软雅黑', helvetica, arial, sans-serif;
+  --g-text-color: #fff;
+  --g-bg: #051932;
+  --g-bg-2: #0b2341;
+  --g-color: #006aff;
+  --g-color-2: #183860;
+  --g-color-3: #adbce1;
 }
