@@ -1,7 +1,7 @@
 <template>
-  <el-menu class="navigation" default-active="2-1">
+  <el-menu class="navigation" :default-active="getIndex()">
     <template v-for="(item, index) in navigation" :key="index">
-      <el-sub-menu v-if="item.children?.length" :key="index" :index="index">
+      <el-sub-menu v-if="item.children?.length" :key="index" :index="String(index)">
         <template #title>
           <img :src="getImgSrc(imgPath, item.label)" />
           <span>{{ item.label }}</span>
@@ -9,12 +9,13 @@
         <el-menu-item
           v-for="(item2, index2) in item.children"
           :key="index2"
-          :index="`${index}-${index2}`">
+          :index="`${index}-${index2}`"
+          @click="$router.push({ name: item2.routeName })">
           <img :src="getImgSrc(imgPath, item2.label)" />
           <span>{{ item2.label }}</span>
         </el-menu-item>
       </el-sub-menu>
-      <el-menu-item v-else :index="String(index)">
+      <el-menu-item v-else :index="String(index)" @click="$router.push({ name: item.routeName })">
         <img :src="getImgSrc(imgPath, item.label)" />
         <span>{{ item.label }}</span>
       </el-menu-item>
@@ -23,10 +24,8 @@
 </template>
 
 <script setup lang="ts">
-import { imgPath, navigation } from './const'
+import { getIndex, imgPath, navigation } from './const'
 import { getImgSrc } from '@/common/utils'
-
-const route = useRoute()
 </script>
 
 <style scoped lang="scss">

@@ -70,3 +70,23 @@ $size-value: (
   background-position: center top;
   background-size: cover;
 }
+
+// 左侧有装饰条的标题
+.g-decorate {
+  position: relative;
+  padding-left: 8px;
+  font-size: 18px;
+  font-weight: bold;
+
+  &::before {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 4px;
+    height: 22px;
+    content: '';
+    background-color: #5477e2;
+    border-radius: 2px;
+    transform: translateY(-50%);
+  }
+}
