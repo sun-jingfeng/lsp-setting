@@ -60,7 +60,7 @@ import Navigation from './Navigation/Navigation.vue'
       align-items: center;
       justify-content: center;
       padding: 16px 0;
-      color: var(--g-color-3);
+      color: #adbce1;
       letter-spacing: 8px;
       cursor: pointer;
 

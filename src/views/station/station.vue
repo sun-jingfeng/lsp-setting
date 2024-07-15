@@ -24,22 +24,24 @@
           <span>雷达型号：</span>
           <el-select v-model="model" clearable>
             <el-option
-              v-for="item in modelOptions"
+              v-for="item in ([] as any[])"
               :key="item.value"
               :label="item.label"
               :value="item.value" />
           </el-select>
         </li>
-        <li class="right">
+        <li>
           <el-button type="primary">查询</el-button>
-          <el-button type="danger">重置</el-button>
+          <el-button type="warning">重置</el-button>
         </li>
       </ul>
     </div>
     <div class="operate">
-      <el-button type="primary" :icon="CirclePlus">新增站点</el-button>
+      <el-button type="primary" :icon="CirclePlus" @click="operateRef?.showDialog('add')"
+        >新增站点</el-button
+      >
       <el-button type="success">批量实时</el-button>
-      <el-button type="danger">批量禁止</el-button>
+      <el-button type="warning">批量禁止</el-button>
     </div>
     <el-table :data="tableData" border>
       <el-table-column prop="date" label="Date" width="180" />
@@ -52,28 +54,26 @@
       :page-sizes="[10, 20, 50, 100]"
       layout="total, sizes, prev, pager, next, jumper"
       :total="total" />
+    <Operate ref="operateRef" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { getLabel } from '@/components/Layout/Navigation/const'
-import {
-  areaOptions,
-  type IModel,
-  type IState,
-  modelOptions,
-  stateOptions,
-  tableData
-} from './const'
+import { areaOptions, type IState, stateOptions, tableData } from './const'
 import { CirclePlus } from '@element-plus/icons-vue'
+import Operate from './Operate/Operate.vue'
 
 const area = ref<string>()
 const state = ref<IState>()
-const model = ref<IModel>()
+const model = ref<string>()
 
 const total = ref(100)
 const currentPage = ref(4)
 const pageSize = ref(10)
+
+// 新增/编辑
+const operateRef = ref<InstanceType<typeof Operate>>()
 </script>
 
 <style scoped lang="scss">
@@ -107,26 +107,8 @@ const pageSize = ref(10)
         }
 
         > .el-select {
-          --el-fill-color-blank: var(--g-color-4);
-          --el-border-color: var(--g-color-4);
-          --el-text-color-regular: var(--g-text-color);
-          --el-color-info-light-9: var(--g-color-7);
-          --el-color-info: var(--g-text-color);
-
           width: 200px;
           height: 32px;
-        }
-      }
-
-      > .right {
-        > .el-button:nth-child(1) {
-          --el-button-border-color: var(--g-color);
-          --el-button-bg-color: var(--g-color);
-        }
-
-        > .el-button:nth-child(2) {
-          --el-button-border-color: var(--g-color-6);
-          --el-button-bg-color: var(--g-color-6);
         }
       }
     }
@@ -134,41 +116,15 @@ const pageSize = ref(10)
 
   > .operate {
     padding: 8px 0;
-
-    > .el-button:nth-child(1) {
-      --el-button-border-color: var(--g-color);
-      --el-button-bg-color: var(--g-color);
-    }
-
-    > .el-button:nth-child(2) {
-      --el-button-border-color: var(--g-color-5);
-      --el-button-bg-color: var(--g-color-5);
-    }
-
-    > .el-button:nth-child(3) {
-      --el-button-border-color: var(--g-color-6);
-      --el-button-bg-color: var(--g-color-6);
-    }
   }
 
   > .el-table {
-    --el-bg-color: var(--g-bg-2);
-    --el-table-border-color: var(--g-color-8);
-    --el-table-row-hover-bg-color: var(--g-color-8);
-    --el-table-text-color: var(--g-text-color);
-    --el-table-header-text-color: var(--g-text-color);
-
     flex: 1;
     height: 0;
     margin-bottom: 8px;
   }
 
   > .el-pagination {
-    --el-text-color-regular: var(--g-text-color);
-    --el-fill-color-blank: var(--g-bg-2);
-    --el-border-color: var(--g-color-4);
-    --el-text-color-primary: var(--g-text-color);
-
     position: relative;
     justify-content: flex-end;
 

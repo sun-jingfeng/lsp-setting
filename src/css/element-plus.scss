@@ -1,1 +1,24 @@
-// 更改element-plus组件默认样式
+.el-button--primary {
+  --el-button-border-color: #006aff !important;
+  --el-button-bg-color: #006aff !important;
+}
+
+.el-button--success {
+  --el-button-border-color: #64c253 !important;
+  --el-button-bg-color: #64c253 !important;
+}
+
+.el-button--warning {
+  --el-button-border-color: #f36c20 !important;
+  --el-button-bg-color: #f36c20 !important;
+}
+
+.el-table {
+  --el-bg-color: var(--g-bg-2) !important;
+  --el-table-text-color: var(--g-text-color) !important;
+  --el-table-header-text-color: var(--g-text-color) !important;
+}
+
+.el-select {
+  --el-text-color-regular: var(--g-text-color) !important;
+}

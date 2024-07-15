@@ -30,8 +30,6 @@ import { getImgSrc } from '@/common/utils'
 
 <style scoped lang="scss">
 .navigation {
-  --el-menu-bg-color: var(--g-bg-2);
-  --el-menu-hover-bg-color: var(--g-color-2);
   --el-menu-text-color: var(--g-text-color);
   --el-menu-active-color: var(--g-text-color);
 
@@ -41,7 +39,7 @@ import { getImgSrc } from '@/common/utils'
   border: none;
 
   .el-menu-item.is-active {
-    background-color: var(--g-color);
+    background-color: #006aff;
   }
 
   img {

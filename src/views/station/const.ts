@@ -1,15 +1,5 @@
 export type IState = 'state1' | 'state2'
 
-export type IModel =
-  | 'model1'
-  | 'model2'
-  | 'model3'
-  | 'model4'
-  | 'model5'
-  | 'model6'
-  | 'model7'
-  | 'model8'
-
 export const areaOptions = [
   {
     value: '1',
@@ -89,41 +79,6 @@ export const stateOptions: { label: string; value: IState }[] = [
   {
     label: '未实时',
     value: 'state2'
-  }
-]
-
-export const modelOptions: { label: string; value: IModel }[] = [
-  {
-    label: 'C单偏振',
-    value: 'model1'
-  },
-  {
-    label: 'C双偏振',
-    value: 'model2'
-  },
-  {
-    label: 'S单偏振',
-    value: 'model3'
-  },
-  {
-    label: 'S双偏振',
-    value: 'model4'
-  },
-  {
-    label: 'X单偏振',
-    value: 'model5'
-  },
-  {
-    label: 'X双偏振',
-    value: 'model6'
-  },
-  {
-    label: 'X相控阵',
-    value: 'model7'
-  },
-  {
-    label: 'S相控阵',
-    value: 'model8'
   }
 ]
 

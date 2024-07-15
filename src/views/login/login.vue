@@ -86,6 +86,7 @@ const onSubmit = async () => {
     width: 420px;
     padding: 50px 60px;
     background-color: #fff;
+    background-color: var(--g-bg-2);
     border-radius: 8px;
     transform: translate(-50%, -50%);
 
