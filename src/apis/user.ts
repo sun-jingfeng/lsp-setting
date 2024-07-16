@@ -3,12 +3,9 @@ import { request, requestPackage } from '@/common/axios'
 
 export const loginApi = (data: { username: string; password: string }) => {
   return request<string>({
-    url: '/admin/log/login',
-    method: 'post',
-    params: {
-      ...data,
-      cid: 'hazhqx'
-    }
+    url: '/lsp-tianjin/login',
+    method: 'get',
+    data
   }).then(res => {
     // 数据处理
     return res

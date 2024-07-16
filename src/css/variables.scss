@@ -4,12 +4,14 @@
 
   // 切换
   --g-text-color: #484949;
+  --g-text-color-bg: #f2f2f2;
   --g-bg: #f5f6fa;
   --g-bg-2: #fff;
 }
 
 html.dark {
   --g-text-color: #eceff8;
+  --g-text-color-bg: #1d3c5f;
   --g-bg: #051932;
   --g-bg-2: #0b2341;
 }

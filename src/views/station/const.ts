@@ -1,4 +1,4 @@
-export type IState = 'state1' | 'state2'
+export type IProState = 'proState1' | 'proState2'
 
 export const areaOptions = [
   {
@@ -71,14 +71,14 @@ export const areaOptions = [
   }
 ]
 
-export const stateOptions: { label: string; value: IState }[] = [
+export const stateOptions: { label: string; value: IProState }[] = [
   {
     label: '实时',
-    value: 'state1'
+    value: 'proState1'
   },
   {
     label: '未实时',
-    value: 'state2'
+    value: 'proState2'
   }
 ]
 

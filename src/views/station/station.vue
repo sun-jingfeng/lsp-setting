@@ -6,7 +6,7 @@
         <li class="left">
           <span>雷达站选择：</span>
           <el-tree-select
-            v-model="area"
+            v-model="radarArea"
             :data="areaOptions"
             multiple
             collapse-tags
@@ -14,7 +14,7 @@
             show-checkbox
             clearable />
           <span>生产情况：</span>
-          <el-select v-model="state" clearable>
+          <el-select v-model="proState" clearable>
             <el-option
               v-for="item in stateOptions"
               :key="item.value"
@@ -22,12 +22,12 @@
               :value="item.value" />
           </el-select>
           <span>雷达型号：</span>
-          <el-select v-model="model" clearable>
+          <el-select v-model="radarType" clearable>
             <el-option
-              v-for="item in ([] as any[])"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value" />
+              v-for="(item, index) in radarTypeOptions"
+              :key="index"
+              :label="item.radarType"
+              :value="item.radarType" />
           </el-select>
         </li>
         <li>
@@ -54,19 +54,31 @@
       :page-sizes="[10, 20, 50, 100]"
       layout="total, sizes, prev, pager, next, jumper"
       :total="total" />
-    <Operate ref="operateRef" />
   </div>
+  <Operate ref="operateRef" />
 </template>
 
 <script setup lang="ts">
 import { getLabel } from '@/components/Layout/Navigation/const'
-import { areaOptions, type IState, stateOptions, tableData } from './const'
+import { areaOptions, type IProState, stateOptions, tableData } from './const'
 import { CirclePlus } from '@element-plus/icons-vue'
 import Operate from './Operate/Operate.vue'
+import { getRadarTypeListApi } from '@/apis/station'
+import type { IPickResponse } from '@/common/axios'
 
-const area = ref<string>()
-const state = ref<IState>()
-const model = ref<string>()
+const radarArea = ref<string>()
+const proState = ref<IProState>()
+const radarType = ref<string>()
+const radarTypeOptions = ref<IPickResponse<typeof getRadarTypeListApi>>()
+const getRadarTypeList = async () => {
+  try {
+    const { data: res } = await getRadarTypeListApi()
+    radarTypeOptions.value = res
+  } catch (error: any) {
+    console.error(error)
+  }
+}
+getRadarTypeList()
 
 const total = ref(100)
 const currentPage = ref(4)

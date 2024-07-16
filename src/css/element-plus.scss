@@ -21,4 +21,10 @@
 
 .el-select {
   --el-text-color-regular: var(--g-text-color) !important;
+  --el-fill-color-blank: var(--g-text-color-bg) !important;
+}
+
+.el-input{
+  --el-input-bg-color: var(--g-text-color-bg) !important;
+  --el-fill-color-light: var(--g-text-color-bg) !important;
 }

@@ -43,7 +43,7 @@ const router = useRouter()
 const route = useRoute()
 
 const formData: Parameters<typeof loginApi>[0] = reactive({
-  username: 'haadmin',
+  username: 'admin',
   password: '123456'
 })
 const formRef = ref<InstanceType<typeof ElForm>>()
@@ -54,7 +54,7 @@ const onSubmit = async () => {
       loading.value = true
       try {
         const { data: res } = await loginApi(formData)
-        setToken('bearer ' + res)
+        setToken('Bearer ' + res)
         router.push((route.query[redirectKey] ?? '/') as string)
         ElMessage.success('登陆成功！')
       } catch (error: any) {
