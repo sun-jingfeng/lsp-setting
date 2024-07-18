@@ -1,12 +1,12 @@
 <template>
-  <div class="station">
+  <div class="station" v-loading="loading">
     <div class="top">
       <p class="g-decorate">{{ getLabel() }}</p>
       <ul class="filter">
         <li class="left">
           <span>雷达站选择：</span>
           <el-tree-select
-            v-model="radarArea"
+            v-model="filterData.radarArea"
             :data="areaOptions"
             multiple
             collapse-tags
@@ -14,7 +14,7 @@
             show-checkbox
             clearable />
           <span>生产情况：</span>
-          <el-select v-model="proState" clearable>
+          <el-select v-model="filterData.proState" clearable>
             <el-option
               v-for="item in stateOptions"
               :key="item.value"
@@ -22,53 +22,75 @@
               :value="item.value" />
           </el-select>
           <span>雷达型号：</span>
-          <el-select v-model="radarType" clearable>
+          <el-select v-model="filterData.radarType" clearable>
             <el-option
               v-for="(item, index) in radarTypeOptions"
               :key="index"
               :label="item.radarType"
-              :value="item.radarType" />
+              :value="item.id" />
           </el-select>
         </li>
         <li>
-          <el-button type="primary">查询</el-button>
-          <el-button type="warning">重置</el-button>
+          <el-button type="primary" @click="getStationList">查询</el-button>
+          <el-button type="warning" @click="filterData = {}">重置</el-button>
         </li>
       </ul>
     </div>
     <div class="operate">
-      <el-button type="primary" :icon="CirclePlus" @click="operateRef?.showDialog('add')"
-        >新增站点</el-button
-      >
+      <el-button type="primary" :icon="CirclePlus" @click="addStation">新增台站</el-button>
       <el-button type="success">批量实时</el-button>
       <el-button type="warning">批量禁止</el-button>
     </div>
-    <el-table :data="tableData" border>
-      <el-table-column prop="date" label="Date" width="180" />
-      <el-table-column prop="name" label="Name" width="180" />
-      <el-table-column prop="address" label="Address" />
+    <el-table :data="stationList" border>
+      <el-table-column type="selection" width="55" align="center" />
+      <el-table-column type="index" label="序号" width="60" align="center" />
+      <el-table-column prop="stationNo" label="站号" />
+      <el-table-column prop="stationName" label="站名" />
+      <el-table-column prop="area" label="区域" />
+      <el-table-column prop="province" label="省份" />
+      <el-table-column prop="longitude" label="经度(°)" />
+      <el-table-column prop="latitude" label="纬度(°)" />
+      <el-table-column prop="altitude" label="高度(km)" />
+      <el-table-column prop="radarType" label="雷达型号" />
+      <el-table-column label="是否实时生产" width="200">
+        <template #default="{ row }">
+          <el-radio-group :modelValue="row.proState">
+            <el-radio v-for="item in stateOptions" :key="item.value" :value="item.value">{{
+              item.label
+            }}</el-radio>
+          </el-radio-group>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" width="120">
+        <el-button type="primary" link>编辑</el-button>
+        <el-button type="danger" link>删除</el-button>
+      </el-table-column>
     </el-table>
     <el-pagination
-      v-model:current-page="currentPage"
+      v-model:current-page="pageNum"
       v-model:page-size="pageSize"
       :page-sizes="[10, 20, 50, 100]"
       layout="total, sizes, prev, pager, next, jumper"
       :total="total" />
   </div>
-  <Operate ref="operateRef" />
+  <Operate v-if="showOperate" :operateType="operateType" @closeOperate="closeOperate" />
 </template>
 
 <script setup lang="ts">
 import { getLabel } from '@/components/Layout/Navigation/const'
-import { areaOptions, type IProState, stateOptions, tableData } from './const'
+import { areaOptions, type IProState, stateOptions } from './const'
 import { CirclePlus } from '@element-plus/icons-vue'
 import Operate from './Operate/Operate.vue'
-import { getRadarTypeListApi } from '@/apis/station'
+import { getRadarTypeListApi, getStationListApi } from '@/apis/station'
 import type { IPickResponse } from '@/common/axios'
+import type { IOperateType } from './Operate/const'
 
-const radarArea = ref<string>()
-const proState = ref<IProState>()
-const radarType = ref<string>()
+// 筛选区
+const filterData = ref<{
+  radarArea?: string
+  proState?: IProState
+  radarType?: string
+}>({})
 const radarTypeOptions = ref<IPickResponse<typeof getRadarTypeListApi>>()
 const getRadarTypeList = async () => {
   try {
@@ -80,12 +102,53 @@ const getRadarTypeList = async () => {
 }
 getRadarTypeList()
 
-const total = ref(100)
-const currentPage = ref(4)
+// 列表
+const total = ref(0)
+const pageNum = ref(1)
 const pageSize = ref(10)
+const stationList = ref<IPickResponse<typeof getStationListApi>['records']>()
+const loading = ref(false)
+watch([filterData, pageNum, pageSize], getStationList, {
+  immediate: true,
+  deep: true
+})
+async function getStationList() {
+  loading.value = true
+  try {
+    const { data: res } = await getStationListApi({
+      pageNum: pageNum.value,
+      pageSize: pageSize.value,
+      proState: filterData.value.proState,
+      radarType: filterData.value.radarType
+    })
+    total.value = res.total
+    stationList.value = res.records
+  } catch (error: any) {
+    console.error(error)
+  } finally {
+    loading.value = false
+  }
+}
 
-// 新增/编辑
-const operateRef = ref<InstanceType<typeof Operate>>()
+// 新增、编辑
+const operateType = ref<IOperateType>('add')
+const showOperate = ref(false)
+const addStation = () => {
+  operateType.value = 'add'
+  showOperate.value = true
+}
+const editStation = () => {
+  operateType.value = 'edit'
+  showOperate.value = true
+}
+const closeOperate = (refresh = false) => {
+  refresh && getStationList()
+  setTimeout(() => {
+    showOperate.value = false
+  }, 200)
+}
+
+// 删除
 </script>
 
 <style scoped lang="scss">

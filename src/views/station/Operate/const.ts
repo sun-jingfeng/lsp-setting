@@ -1,4 +1,15 @@
-export type IType = 'add' | 'edit'
+export type IOperateType = 'add' | 'edit'
+
+export type IStation = {
+  stationNo: string
+  stationName: string
+  area: string
+  province: string
+  longitude: number
+  latitude: number
+  altitude: number
+  radarType: string
+}
 
 export const areaList: {
   label: string
@@ -176,3 +187,5 @@ export const areaList: {
     ]
   }
 ]
+
+export const repetitionKey = /禁止重复配置/

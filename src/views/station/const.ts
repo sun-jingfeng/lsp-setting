@@ -1,4 +1,4 @@
-export type IProState = 'proState1' | 'proState2'
+export type IProState = 1 | 0
 
 export const areaOptions = [
   {
@@ -74,16 +74,10 @@ export const areaOptions = [
 export const stateOptions: { label: string; value: IProState }[] = [
   {
     label: '实时',
-    value: 'proState1'
+    value: 1
   },
   {
     label: '未实时',
-    value: 'proState2'
+    value: 0
   }
 ]
-
-export const tableData = new Array(100).fill({
-  date: '2016-05-01',
-  name: 'Tom',
-  address: 'No. 189, Grove St, Los Angeles'
-})

@@ -4,7 +4,7 @@
       :modelValue="true"
       :close-on-click-modal="false"
       :close-on-press-escape="false"
-      @close="emit('closeDialog')"
+      @close="emit('closeRadar')"
       title="雷达型号管理">
       <el-input v-model="inputValue" @keyup.enter="addRadarType" @input="inputChange" clearable>
         <template #suffix>
@@ -14,7 +14,7 @@
       <p class="tip" :class="[tipStateOptions.find(item => item.tipState === tipState)?.className]">
         {{ tipStateOptions.find(item => item.tipState === tipState)?.msg }}
       </p>
-      <h4 class="g-decorate">已有标签</h4>
+      <h4 class="g-decorate">已有雷达型号（{{ filterRadarTypeOptions?.length }}）</h4>
       <ul v-loading="loading">
         <template v-if="filterRadarTypeOptions?.length">
           <li v-for="(item, index) in filterRadarTypeOptions" :key="`${index}_${item.radarType}`">
@@ -33,8 +33,10 @@
                   clearable />
               </el-popover>
               <el-popconfirm
-                :title="`确定删除雷达类型：${item.radarType} ？`"
-                @confirm="deleteRadarType({ id: item.id })">
+                :title="`确定删除雷达类型：${item.radarType} ？（ ${stationNum} 个台站）`"
+                @confirm="deleteRadarType({ id: item.id })"
+                @show="getStationNumByRadarType(item.id)"
+                @hide="stationNum = '-'">
                 <template #reference>
                   <img src="./images/delete.png" />
                 </template>
@@ -50,6 +52,7 @@
 
 <script setup lang="ts">
 import { Select } from '@element-plus/icons-vue'
+import { getStationNumByRadarTypeApi } from '@/apis/station'
 import {
   addRadarTypeApi,
   deleteRadarTypeApi,
@@ -61,7 +64,7 @@ import { repetitionKey, tipStateOptions, type ITipState } from './const'
 import { ElMessage } from 'element-plus'
 
 const emit = defineEmits<{
-  (e: 'closeDialog'): void
+  (e: 'closeRadar'): void
 }>()
 
 // 输入框
@@ -104,7 +107,7 @@ const addRadarType = async () => {
       const { data: res } = await addRadarTypeApi({ radarType: inputValue.value })
       if (repetitionKey.test(res)) {
         tipState.value = '3'
-        ElMessage.warning('雷达型号重复！')
+        ElMessage.warning(res)
       } else {
         tipState.value = '2'
         ElMessage.success('新增雷达型号成功！')
@@ -128,7 +131,7 @@ const editRadarType = async (data: Parameters<typeof editRadarTypeApi>[0], top?:
   try {
     const { data: res } = await editRadarTypeApi(data)
     if (repetitionKey.test(res)) {
-      ElMessage.warning('雷达型号重复！')
+      ElMessage.warning(res)
     } else {
       ElMessage.success(`${top ? '置顶' : '编辑'}雷达型号成功！`)
     }
@@ -142,6 +145,15 @@ const editRadarType = async (data: Parameters<typeof editRadarTypeApi>[0], top?:
 }
 
 // 删除
+const stationNum = ref<string | number>('-')
+const getStationNumByRadarType = async (radarTypeId: number) => {
+  try {
+    const { data: res } = await getStationNumByRadarTypeApi({ radarTypeId })
+    stationNum.value = res
+  } catch (error: any) {
+    console.error(error)
+  }
+}
 const deleteRadarType = async (data: Parameters<typeof deleteRadarTypeApi>[0]) => {
   loading.value = true
   try {

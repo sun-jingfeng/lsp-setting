@@ -42,6 +42,7 @@ module.exports = {
     'vue/multi-word-component-names': 'off',
     'vue/valid-v-slot': 'off',
     'no-console': ['warn', { allow: ['error'] }],
-    'no-debugger': 'warn'
+    'no-debugger': 'warn',
+    '@typescript-eslint/consistent-type-imports': 'error'
   }
 }
