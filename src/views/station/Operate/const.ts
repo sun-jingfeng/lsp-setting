@@ -1,3 +1,5 @@
+import type { IProState } from '../const'
+
 export type IOperateType = 'add' | 'edit'
 
 export type IStation = {
@@ -5,21 +7,26 @@ export type IStation = {
   stationName: string
   area: string
   province: string
-  longitude: number
-  latitude: number
-  altitude: number
-  radarType: string
+  longitude: string
+  latitude: string
+  altitude: string
+  radarId: string
+  stationId?: string
+  proState?: IProState
 }
 
-export const areaList: {
+export type IAreaList = {
   label: string
   value: string
-  provinceList: { label: string; value: string }[]
-}[] = [
+  num?: number
+  children?: IAreaList
+}[]
+
+export const areaList: IAreaList = [
   {
     label: '华北地区',
     value: '华北地区',
-    provinceList: [
+    children: [
       {
         label: '北京',
         value: '北京'
@@ -45,7 +52,7 @@ export const areaList: {
   {
     label: '东北地区',
     value: '东北地区',
-    provinceList: [
+    children: [
       {
         label: '黑龙江',
         value: '黑龙江'
@@ -63,7 +70,7 @@ export const areaList: {
   {
     label: '华东地区',
     value: '华东地区',
-    provinceList: [
+    children: [
       {
         label: '上海',
         value: '上海'
@@ -93,7 +100,7 @@ export const areaList: {
   {
     label: '华中地区',
     value: '华中地区',
-    provinceList: [
+    children: [
       {
         label: '河南',
         value: '河南'
@@ -111,7 +118,7 @@ export const areaList: {
   {
     label: '华南地区',
     value: '华南地区',
-    provinceList: [
+    children: [
       {
         label: '广东',
         value: '广东'
@@ -137,7 +144,7 @@ export const areaList: {
   {
     label: '西南地区',
     value: '西南地区',
-    provinceList: [
+    children: [
       {
         label: '重庆',
         value: '重庆'
@@ -163,7 +170,7 @@ export const areaList: {
   {
     label: '西北地区',
     value: '西北地区',
-    provinceList: [
+    children: [
       {
         label: '陕西',
         value: '陕西'

@@ -11,7 +11,7 @@
         :model="formData"
         label-position="left"
         label-width="auto"
-        :rules="rules"
+        :rules="formRules"
         v-loading="loading">
         <el-form-item label="站号：" prop="stationNo">
           <el-input v-model="formData.stationNo" clearable placeholder="请输入" />
@@ -31,7 +31,7 @@
         <el-form-item label="省份：" prop="province">
           <el-select v-model="formData.province" clearable>
             <el-option
-              v-for="item in provinceList"
+              v-for="item in children"
               :key="item.value"
               :label="item.label"
               :value="item.value" />
@@ -64,13 +64,13 @@
             <template #append>km</template>
           </el-input>
         </el-form-item>
-        <el-form-item label="雷达型号：" prop="radarType">
-          <el-select v-model="formData.radarType" clearable filterable>
+        <el-form-item label="雷达型号：" prop="radarId">
+          <el-select v-model="formData.radarId" clearable filterable>
             <el-option
               v-for="(item, index) in radarTypeOptions"
               :key="index"
               :label="item.radarType"
-              :value="item.id" />
+              :value="item.radarId" />
           </el-select>
           <img class="tag" src="./images/tag.png" @click="showRadar = true" />
         </el-form-item>
@@ -92,15 +92,28 @@ import type { IStation } from './const'
 import { areaList, repetitionKey, type IOperateType } from './const'
 import { formatNum } from '@/common/utils'
 import Radar from './Radar/Radar.vue'
-import { addStationApi, getRadarTypeListApi } from '@/apis/station'
+import { addOrEditStationApi, getRadarTypeListApi, sameVerifyApi } from '@/apis/station'
 import type { IPickResponse } from '@/common/axios'
-import { ElMessage, type FormInstance, type FormRules } from 'element-plus'
+import type { FormRules } from 'element-plus'
+import { ElMessage, type FormInstance } from 'element-plus'
 
 type IProps = {
   operateType: IOperateType
+  initFormData?: IStation
 }
 
-const props = withDefaults(defineProps<IProps>(), {})
+const props = withDefaults(defineProps<IProps>(), {
+  initFormData: () => ({
+    stationNo: '',
+    stationName: '',
+    area: '',
+    province: '',
+    longitude: '',
+    latitude: '',
+    altitude: '',
+    radarId: ''
+  })
+})
 const emit = defineEmits<{
   (e: 'closeOperate', refresh?: boolean): void
 }>()
@@ -128,39 +141,70 @@ const getRadarTypeList = async () => {
 getRadarTypeList()
 
 // 表单数据
-const formData = ref<Record<keyof IStation, string>>({
-  stationNo: '',
-  stationName: '',
-  area: '',
-  province: '',
-  longitude: '',
-  latitude: '',
-  altitude: '',
-  radarType: ''
-})
-const provinceList = computed(
-  () => areaList.find(item => item.value === formData.value.area)?.provinceList ?? []
+const formData = ref<IStation>(props.initFormData)
+const children = computed(
+  () => areaList.find(item => item.value === formData.value.area)?.children ?? []
 )
 watch(
   () => formData.value.area,
   () => {
-    if (!provinceList.value.find(item => item.value === formData.value.province)) {
+    if (!children.value.find(item => item.value === formData.value.province)) {
       formData.value.province = ''
     }
   }
 )
 
 // 表单验证
-const rules = ref<FormRules<typeof formData>>({
-  stationNo: [{ required: true, message: '请输入', trigger: 'change' }],
-  stationName: [{ required: true, message: '请输入', trigger: 'change' }],
+const formRules: FormRules<IStation> = {
+  stationNo: [
+    { required: true, message: '请输入', trigger: 'change' },
+    {
+      validator: (rule, value, callback) => {
+        sameVerifyApi({ stationNo: value }).then(
+          ({ data: res }) => {
+            if (res && props.operateType === 'add') {
+              callback(new Error('已存在相同站号！'))
+            } else {
+              callback()
+            }
+          },
+          error => {
+            console.error(error)
+            callback()
+          }
+        )
+      },
+      trigger: 'blur'
+    }
+  ],
+  stationName: [
+    { required: true, message: '请输入', trigger: 'change' },
+    {
+      validator: (rule, value, callback) => {
+        sameVerifyApi({ stationName: value }).then(
+          ({ data: res }) => {
+            if (res && props.operateType === 'add') {
+              callback(new Error('已存在相同站名！'))
+            } else {
+              callback()
+            }
+          },
+          error => {
+            console.error(error)
+            callback()
+          }
+        )
+      },
+      trigger: 'blur'
+    }
+  ],
   area: [{ required: true, message: '请选择', trigger: 'change' }],
   province: [{ required: true, message: '请选择', trigger: 'change' }],
   longitude: [{ required: true, message: '请输入', trigger: 'change' }],
   latitude: [{ required: true, message: '请输入', trigger: 'change' }],
   altitude: [{ required: true, message: '请输入', trigger: 'change' }],
-  radarType: [{ required: true, message: '请选择', trigger: 'change' }]
-})
+  radarId: [{ required: true, message: '请选择', trigger: 'change' }]
+}
 
 // 提交
 const loading = ref(false)
@@ -170,7 +214,7 @@ const onSubmit = () => {
     if (valid) {
       loading.value = true
       try {
-        const { data: res } = await addStationApi(formData.value)
+        const { data: res } = await addOrEditStationApi(formData.value)
         if (repetitionKey.test(res)) {
           ElMessage.warning(res)
         } else {

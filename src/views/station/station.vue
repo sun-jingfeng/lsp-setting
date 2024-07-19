@@ -6,8 +6,8 @@
         <li class="left">
           <span>雷达站选择：</span>
           <el-tree-select
-            v-model="filterData.radarArea"
-            :data="areaOptions"
+            v-model="filterData.radarAreaList"
+            :data="radarAreaList"
             multiple
             collapse-tags
             collapse-tags-tooltip
@@ -22,28 +22,36 @@
               :value="item.value" />
           </el-select>
           <span>雷达型号：</span>
-          <el-select v-model="filterData.radarType" clearable>
+          <el-select v-model="filterData.radarId" clearable>
             <el-option
               v-for="(item, index) in radarTypeOptions"
               :key="index"
               :label="item.radarType"
-              :value="item.id" />
+              :value="item.radarId" />
           </el-select>
         </li>
         <li>
           <el-button type="primary" @click="getStationList">查询</el-button>
-          <el-button type="warning" @click="filterData = {}">重置</el-button>
+          <el-button type="warning" @click="resetFilter">重置</el-button>
         </li>
       </ul>
     </div>
     <div class="operate">
       <el-button type="primary" :icon="CirclePlus" @click="addStation">新增台站</el-button>
-      <el-button type="success">批量实时</el-button>
-      <el-button type="warning">批量禁止</el-button>
+      <el-button type="success" @click="batchChangeProState(1)">批量实时</el-button>
+      <el-button type="warning" @click="batchChangeProState(0)">批量禁止</el-button>
     </div>
-    <el-table :data="stationList" border>
+    <el-table :data="stationList" border @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column type="index" label="序号" width="60" align="center" />
+      <el-table-column label="序号" width="60" align="center">
+        <template #default="{ row }">
+          <span>{{
+            (pageNum - 1) * pageSize +
+            (stationList?.findIndex(item => item.stationId === row.stationId) ?? 0) +
+            1
+          }}</span>
+        </template>
+      </el-table-column>
       <el-table-column prop="stationNo" label="站号" />
       <el-table-column prop="stationName" label="站名" />
       <el-table-column prop="area" label="区域" />
@@ -51,10 +59,16 @@
       <el-table-column prop="longitude" label="经度(°)" />
       <el-table-column prop="latitude" label="纬度(°)" />
       <el-table-column prop="altitude" label="高度(km)" />
-      <el-table-column prop="radarType" label="雷达型号" />
+      <el-table-column label="雷达型号">
+        <template #default="{ row }">
+          <span>{{ radarTypeOptions?.find(item => item.radarId === row.radarId)?.radarType }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="是否实时生产" width="200">
         <template #default="{ row }">
-          <el-radio-group :modelValue="row.proState">
+          <el-radio-group
+            :modelValue="row.proState"
+            @change="changeProState(row.stationId, $event as IProState)">
             <el-radio v-for="item in stateOptions" :key="item.value" :value="item.value">{{
               item.label
             }}</el-radio>
@@ -62,8 +76,12 @@
         </template>
       </el-table-column>
       <el-table-column label="操作" width="120">
-        <el-button type="primary" link>编辑</el-button>
-        <el-button type="danger" link>删除</el-button>
+        <template #default="{ row }">
+          <el-button type="primary" link @click="editStation(row)">编辑</el-button>
+          <el-button type="danger" link @click="deleteStation(row.stationId, row.stationName)"
+            >删除</el-button
+          >
+        </template>
       </el-table-column>
     </el-table>
     <el-pagination
@@ -73,25 +91,43 @@
       layout="total, sizes, prev, pager, next, jumper"
       :total="total" />
   </div>
-  <Operate v-if="showOperate" :operateType="operateType" @closeOperate="closeOperate" />
+  <Operate
+    v-if="showOperate"
+    :operateType="operateType"
+    :initFormData="initFormData"
+    @closeOperate="closeOperate" />
 </template>
 
 <script setup lang="ts">
 import { getLabel } from '@/components/Layout/Navigation/const'
-import { areaOptions, type IProState, stateOptions } from './const'
+import type { IProState } from './const'
+import { initFilterData, stateOptions } from './const'
 import { CirclePlus } from '@element-plus/icons-vue'
 import Operate from './Operate/Operate.vue'
-import { getRadarTypeListApi, getStationListApi } from '@/apis/station'
+import { getRadarAreaListApi } from '@/apis/station'
+import {
+  changeProStateApi,
+  deleteStationApi,
+  getRadarTypeListApi,
+  getStationListApi
+} from '@/apis/station'
 import type { IPickResponse } from '@/common/axios'
-import type { IOperateType } from './Operate/const'
+import type { IOperateType, IStation } from './Operate/const'
+import { ElMessage, ElMessageBox } from 'element-plus'
 
 // 筛选区
-const filterData = ref<{
-  radarArea?: string
-  proState?: IProState
-  radarType?: string
-}>({})
+const filterData = ref(initFilterData())
+const radarAreaList = ref<IPickResponse<typeof getRadarAreaListApi>>()
 const radarTypeOptions = ref<IPickResponse<typeof getRadarTypeListApi>>()
+const getRadarAreaList = async () => {
+  try {
+    const { data: res } = await getRadarAreaListApi()
+    radarAreaList.value = res
+  } catch (error: any) {
+    console.error(error)
+  }
+}
+getRadarAreaList()
 const getRadarTypeList = async () => {
   try {
     const { data: res } = await getRadarTypeListApi()
@@ -101,6 +137,10 @@ const getRadarTypeList = async () => {
   }
 }
 getRadarTypeList()
+const resetFilter = () => {
+  filterData.value = initFilterData()
+  getStationList()
+}
 
 // 列表
 const total = ref(0)
@@ -108,7 +148,7 @@ const pageNum = ref(1)
 const pageSize = ref(10)
 const stationList = ref<IPickResponse<typeof getStationListApi>['records']>()
 const loading = ref(false)
-watch([filterData, pageNum, pageSize], getStationList, {
+watch([pageNum, pageSize], getStationList, {
   immediate: true,
   deep: true
 })
@@ -118,8 +158,9 @@ async function getStationList() {
     const { data: res } = await getStationListApi({
       pageNum: pageNum.value,
       pageSize: pageSize.value,
+      radarAreaList: filterData.value.radarAreaList,
       proState: filterData.value.proState,
-      radarType: filterData.value.radarType
+      radarId: filterData.value.radarId
     })
     total.value = res.total
     stationList.value = res.records
@@ -131,13 +172,15 @@ async function getStationList() {
 }
 
 // 新增、编辑
+const initFormData = ref<IStation>()
 const operateType = ref<IOperateType>('add')
 const showOperate = ref(false)
 const addStation = () => {
   operateType.value = 'add'
   showOperate.value = true
 }
-const editStation = () => {
+const editStation = (i_initFormData: IStation) => {
+  initFormData.value = i_initFormData
   operateType.value = 'edit'
   showOperate.value = true
 }
@@ -148,7 +191,64 @@ const closeOperate = (refresh = false) => {
   }, 200)
 }
 
+// 改变生产情况
+const changeProState = async (stationId: string, proState: IProState) => {
+  loading.value = true
+  try {
+    await changeProStateApi({ stationIdList: [stationId], proState })
+    loading.value = false
+    getStationList()
+    ElMessage.success('改变台站生产情况成功！')
+  } catch (error: any) {
+    ElMessage.warning('改变台站生产情况失败！')
+    console.error(error)
+    loading.value = false
+  }
+}
+
+// 批量改变生产情况
+let selectedStationIdList: string[]
+const handleSelectionChange = (
+  i_stationList: IPickResponse<typeof getStationListApi>['records']
+) => {
+  selectedStationIdList = i_stationList.map(item => item.stationId ?? '')
+}
+const batchChangeProState = async (proState: IProState) => {
+  loading.value = true
+  try {
+    await changeProStateApi({ stationIdList: selectedStationIdList, proState })
+    loading.value = false
+    getStationList()
+    ElMessage.success('改变台站生产情况成功！')
+  } catch (error: any) {
+    ElMessage.warning('改变台站生产情况失败！')
+    loading.value = false
+    console.error(error)
+  }
+}
+
 // 删除
+const deleteStation = (stationId: string, stationName: string) => {
+  ElMessageBox.confirm(`确定删除站台：${stationName} ？`, 'Warning', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  })
+    .then(async () => {
+      loading.value = true
+      try {
+        await deleteStationApi({ stationId })
+        loading.value = false
+        getStationList()
+        ElMessage.success('删除台站成功！')
+      } catch (error: any) {
+        ElMessage.warning('删除台站失败！')
+        loading.value = false
+        console.error(error)
+      }
+    })
+    .catch(() => {})
+}
 </script>
 
 <style scoped lang="scss">

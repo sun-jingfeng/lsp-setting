@@ -17,25 +17,29 @@
       <h4 class="g-decorate">已有雷达型号（{{ filterRadarTypeOptions?.length }}）</h4>
       <ul v-loading="loading">
         <template v-if="filterRadarTypeOptions?.length">
-          <li v-for="(item, index) in filterRadarTypeOptions" :key="`${index}_${item.radarType}`">
+          <li v-for="(item, index) in filterRadarTypeOptions" :key="`${index}_${item.radarId}`">
             <p>{{ item.radarType }}</p>
             <div>
               <img
                 src="./images/top.png"
-                @click="editRadarType({ id: item.id, radarType: item.radarType, top: 1 }, true)" />
+                @click="
+                  editRadarType({ radarId: item.radarId, radarType: item.radarType, top: 1 }, true)
+                " />
               <el-popover trigger="click" @before-enter="editValue = item.radarType">
                 <template #reference>
                   <img src="./images/edit.png" />
                 </template>
                 <el-input
                   v-model="editValue"
-                  @keyup.enter="editRadarType({ id: item.id, radarType: editValue, top: item.top })"
+                  @keyup.enter="
+                    editRadarType({ radarId: item.radarId, radarType: editValue, top: item.top })
+                  "
                   clearable />
               </el-popover>
               <el-popconfirm
-                :title="`确定删除雷达类型：${item.radarType} ？（ ${stationNum} 个台站）`"
-                @confirm="deleteRadarType({ id: item.id })"
-                @show="getStationNumByRadarType(item.id)"
+                :title="`确定删除雷达类型：${item.radarType} ？（关联 ${stationNum} 个台站）`"
+                @confirm="deleteRadarType({ radarId: item.radarId })"
+                @show="getStationNumByRadarType(item.radarId)"
                 @hide="stationNum = '-'">
                 <template #reference>
                   <img src="./images/delete.png" />
@@ -146,9 +150,9 @@ const editRadarType = async (data: Parameters<typeof editRadarTypeApi>[0], top?:
 
 // 删除
 const stationNum = ref<string | number>('-')
-const getStationNumByRadarType = async (radarTypeId: number) => {
+const getStationNumByRadarType = async (radarId: string) => {
   try {
-    const { data: res } = await getStationNumByRadarTypeApi({ radarTypeId })
+    const { data: res } = await getStationNumByRadarTypeApi({ radarId })
     stationNum.value = res
   } catch (error: any) {
     console.error(error)
