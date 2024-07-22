@@ -134,7 +134,7 @@ export const getStationListApi = (params: {
   pageSize: number
   radarAreaList?: string[]
   proState?: IProState
-  radarId?: string
+  radarIdList?: string[]
 }) => {
   return request<{
     total: number
@@ -145,9 +145,9 @@ export const getStationListApi = (params: {
     params: {
       pageNum: params.pageNum,
       pageSize: params.pageSize,
-      province: params.radarAreaList?.join(),
+      province: params.radarAreaList?.join() || undefined,
       realTimeFlag: params.proState,
-      radarTypeID: params.radarId
+      radarTypeID: params.radarIdList?.join() || undefined
     }
   }).then(res => {
     res.data.records = res.data.records?.map(

@@ -1,16 +1,12 @@
-.el-button--primary {
-  --el-button-border-color: #006aff !important;
-  --el-button-bg-color: #006aff !important;
-}
-
-.el-button--success {
-  --el-button-border-color: #64c253 !important;
-  --el-button-bg-color: #64c253 !important;
-}
-
-.el-button--warning {
-  --el-button-border-color: #f36c20 !important;
-  --el-button-bg-color: #f36c20 !important;
+:root {
+  --el-color-primary: #006aff !important;
+  --el-color-primary-light-3: #427ef7 !important;
+  --el-color-success: #64c253 !important;
+  --el-color-success-light-3: #8ec977 !important;
+  --el-color-warning: #f36c20 !important;
+  --el-color-warning-light-3: #e68850 !important;
+  --el-color-danger: #f36c20 !important;
+  --el-color-danger-light-3: #e68850 !important;
 }
 
 .el-table {
@@ -22,9 +18,47 @@
 .el-select {
   --el-text-color-regular: var(--g-text-color) !important;
   --el-fill-color-blank: var(--g-text-color-bg) !important;
+  --el-text-color-placeholder: var(--placeholder-color) !important;
+  --el-border-color: var(--border-color) !important;
 }
 
-.el-input{
+.el-input {
   --el-input-bg-color: var(--g-text-color-bg) !important;
   --el-fill-color-light: var(--g-text-color-bg) !important;
+  --el-text-color-placeholder: var(--placeholder-color) !important;
+  --el-border-color: var(--border-color) !important;
+}
+
+html.dark {
+  .el-table {
+    --el-table-header-bg-color: #102c4e !important;
+    --el-table-border-color: rgb(29 60 95 / 80%) !important;
+    --el-table-row-hover-bg-color: rgb(255 255 255 / 6%) !important;
+  }
+
+  .el-select {
+    --el-border-color-hover: #6f8cd0 !important;
+  }
+
+  .el-input {
+    --el-border-color-hover: #6f8cd0 !important;
+  }
+
+  .el-select__popper.el-popper {
+    --el-bg-color-overlay: #1d3c5f !important;
+    --el-border-color-light: #6f8cd0 !important;
+    --el-box-shadow-light: 0 0 12px rgb(255 255 255 / 10%) !important;
+
+    .el-select-dropdown__item.is-hovering {
+      --el-fill-color-light: rgb(255 255 255 / 10%) !important;
+    }
+  }
+
+  .el-dialog {
+    --el-dialog-bg-color: #102c4e !important;
+  }
+
+  .el-menu-item{
+    --el-menu-hover-bg-color: #183860 !important;
+  }
 }

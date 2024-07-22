@@ -37,7 +37,7 @@
                   clearable />
               </el-popover>
               <el-popconfirm
-                :title="`确定删除雷达类型：${item.radarType} ？（关联 ${stationNum} 个台站）`"
+                :title="`确定删除雷达型号：${item.radarType} ？（关联 ${stationNum} 个台站）`"
                 @confirm="deleteRadarType({ radarId: item.radarId })"
                 @show="getStationNumByRadarType(item.radarId)"
                 @hide="stationNum = '-'">

@@ -39,7 +39,7 @@ import { getImgSrc } from '@/common/utils'
   border: none;
 
   .el-menu-item.is-active {
-    background-color: #006aff;
+    background-color: var(--menu-active-bg);
   }
 
   img {

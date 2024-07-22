@@ -261,5 +261,9 @@ const closeRadar = () => {
       cursor: pointer;
     }
   }
+
+  .el-button.el-button--primary {
+    margin-right: 54px;
+  }
 }
 </style>

@@ -22,7 +22,12 @@
               :value="item.value" />
           </el-select>
           <span>雷达型号：</span>
-          <el-select v-model="filterData.radarId" clearable>
+          <el-select
+            v-model="filterData.radarIdList"
+            clearable
+            multiple
+            collapse-tags
+            collapse-tags-tooltip>
             <el-option
               v-for="(item, index) in radarTypeOptions"
               :key="index"
@@ -160,7 +165,7 @@ async function getStationList() {
       pageSize: pageSize.value,
       radarAreaList: filterData.value.radarAreaList,
       proState: filterData.value.proState,
-      radarId: filterData.value.radarId
+      radarIdList: filterData.value.radarIdList
     })
     total.value = res.total
     stationList.value = res.records
@@ -257,7 +262,7 @@ const deleteStation = (stationId: string, stationName: string) => {
   display: flex;
   flex-direction: column;
   height: 100%;
-  padding: 12px;
+  padding: 16px;
   background-color: var(--g-bg-2);
 
   > .top {
@@ -278,7 +283,7 @@ const deleteStation = (stationId: string, stationName: string) => {
         align-items: center;
 
         > span {
-          margin: 0 10px;
+          margin: 0 10px 0 24px;
         }
 
         > .el-select {
@@ -290,7 +295,7 @@ const deleteStation = (stationId: string, stationName: string) => {
   }
 
   > .operate {
-    padding: 8px 0;
+    padding: 16px 0;
   }
 
   > .el-table {
