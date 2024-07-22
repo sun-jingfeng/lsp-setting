@@ -64,13 +64,13 @@
             <template #append>km</template>
           </el-input>
         </el-form-item>
-        <el-form-item label="雷达型号：" prop="radarId">
-          <el-select v-model="formData.radarId" clearable filterable>
+        <el-form-item label="雷达型号：" prop="radarModelId">
+          <el-select v-model="formData.radarModelId" clearable filterable>
             <el-option
-              v-for="(item, index) in radarTypeOptions"
+              v-for="(item, index) in radarModelOptions"
               :key="index"
-              :label="item.radarType"
-              :value="item.radarId" />
+              :label="item.radarModel"
+              :value="item.radarModelId" />
           </el-select>
           <img class="tag" src="./images/tag.png" @click="showRadar = true" />
         </el-form-item>
@@ -92,7 +92,7 @@ import type { IStation } from './const'
 import { areaList, repetitionKey, type IOperateType } from './const'
 import { formatNum } from '@/common/utils'
 import Radar from './Radar/Radar.vue'
-import { addOrEditStationApi, getRadarTypeListApi, sameVerifyApi } from '@/apis/station'
+import { addOrEditStationApi, getRadarModelListApi, sameVerifyApi } from '@/apis/station'
 import type { IPickResponse } from '@/common/axios'
 import type { FormRules } from 'element-plus'
 import { ElMessage, type FormInstance } from 'element-plus'
@@ -111,7 +111,7 @@ const props = withDefaults(defineProps<IProps>(), {
     longitude: '',
     latitude: '',
     altitude: '',
-    radarId: ''
+    radarModelId: ''
   })
 })
 const emit = defineEmits<{
@@ -129,16 +129,16 @@ const closeOperate = (refresh = false) => {
 }
 
 // 雷达型号
-const radarTypeOptions = ref<IPickResponse<typeof getRadarTypeListApi>>()
-const getRadarTypeList = async () => {
+const radarModelOptions = ref<IPickResponse<typeof getRadarModelListApi>>()
+const getRadarModelList = async () => {
   try {
-    const { data: res } = await getRadarTypeListApi()
-    radarTypeOptions.value = res
+    const { data: res } = await getRadarModelListApi()
+    radarModelOptions.value = res
   } catch (error: any) {
     console.error(error)
   }
 }
-getRadarTypeList()
+getRadarModelList()
 
 // 表单数据
 const formData = ref<IStation>(props.initFormData)
@@ -203,7 +203,7 @@ const formRules: FormRules<IStation> = {
   longitude: [{ required: true, message: '请输入', trigger: 'change' }],
   latitude: [{ required: true, message: '请输入', trigger: 'change' }],
   altitude: [{ required: true, message: '请输入', trigger: 'change' }],
-  radarId: [{ required: true, message: '请选择', trigger: 'change' }]
+  radarModelId: [{ required: true, message: '请选择', trigger: 'change' }]
 }
 
 // 提交

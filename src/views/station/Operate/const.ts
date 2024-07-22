@@ -10,7 +10,7 @@ export type IStation = {
   longitude: string
   latitude: string
   altitude: string
-  radarId: string
+  radarModelId: string
   stationId?: string
   proState?: IProState
 }
@@ -196,5 +196,3 @@ export const areaList: IAreaList = [
 ]
 
 export const repetitionKey = /禁止重复配置/
-
-// 1.筛选区提示文字颜色、表格表头背景色、表格边的颜色、左上操作按钮的间距、表格距离左边的边距、鼠标悬浮表格颜色、

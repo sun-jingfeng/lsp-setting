@@ -23,16 +23,16 @@
           </el-select>
           <span>雷达型号：</span>
           <el-select
-            v-model="filterData.radarIdList"
+            v-model="filterData.radarModelIdList"
             clearable
             multiple
             collapse-tags
             collapse-tags-tooltip>
             <el-option
-              v-for="(item, index) in radarTypeOptions"
+              v-for="(item, index) in radarModelOptions"
               :key="index"
-              :label="item.radarType"
-              :value="item.radarId" />
+              :label="item.radarModel"
+              :value="item.radarModelId" />
           </el-select>
         </li>
         <li>
@@ -66,7 +66,9 @@
       <el-table-column prop="altitude" label="高度(km)" />
       <el-table-column label="雷达型号">
         <template #default="{ row }">
-          <span>{{ radarTypeOptions?.find(item => item.radarId === row.radarId)?.radarType }}</span>
+          <span>{{
+            radarModelOptions?.find(item => item.radarModelId === row.radarModelId)?.radarModel
+          }}</span>
         </template>
       </el-table-column>
       <el-table-column label="是否实时生产" width="200">
@@ -113,7 +115,7 @@ import { getRadarAreaListApi } from '@/apis/station'
 import {
   changeProStateApi,
   deleteStationApi,
-  getRadarTypeListApi,
+  getRadarModelListApi,
   getStationListApi
 } from '@/apis/station'
 import type { IPickResponse } from '@/common/axios'
@@ -123,7 +125,7 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 // 筛选区
 const filterData = ref(initFilterData())
 const radarAreaList = ref<IPickResponse<typeof getRadarAreaListApi>>()
-const radarTypeOptions = ref<IPickResponse<typeof getRadarTypeListApi>>()
+const radarModelOptions = ref<IPickResponse<typeof getRadarModelListApi>>()
 const getRadarAreaList = async () => {
   try {
     const { data: res } = await getRadarAreaListApi()
@@ -133,15 +135,15 @@ const getRadarAreaList = async () => {
   }
 }
 getRadarAreaList()
-const getRadarTypeList = async () => {
+const getRadarModelList = async () => {
   try {
-    const { data: res } = await getRadarTypeListApi()
-    radarTypeOptions.value = res
+    const { data: res } = await getRadarModelListApi()
+    radarModelOptions.value = res
   } catch (error: any) {
     console.error(error)
   }
 }
-getRadarTypeList()
+getRadarModelList()
 const resetFilter = () => {
   filterData.value = initFilterData()
   getStationList()
@@ -165,7 +167,7 @@ async function getStationList() {
       pageSize: pageSize.value,
       radarAreaList: filterData.value.radarAreaList,
       proState: filterData.value.proState,
-      radarIdList: filterData.value.radarIdList
+      radarModelIdList: filterData.value.radarModelIdList
     })
     total.value = res.total
     stationList.value = res.records

@@ -6,40 +6,49 @@
       :close-on-press-escape="false"
       @close="emit('closeRadar')"
       title="雷达型号管理">
-      <el-input v-model="inputValue" @keyup.enter="addRadarType" @input="inputChange" clearable>
+      <el-input v-model="inputValue" @keyup.enter="addRadarModel" @input="inputChange" clearable>
         <template #suffix>
-          <el-icon @click="addRadarType"><Select /></el-icon>
+          <el-icon @click="addRadarModel"><Select /></el-icon>
         </template>
       </el-input>
       <p class="tip" :class="[tipStateOptions.find(item => item.tipState === tipState)?.className]">
         {{ tipStateOptions.find(item => item.tipState === tipState)?.msg }}
       </p>
-      <h4 class="g-decorate">已有雷达型号（{{ filterRadarTypeOptions?.length }}）</h4>
+      <h4 class="g-decorate">已有雷达型号（{{ filterRadarModelOptions?.length }}）</h4>
       <ul v-loading="loading">
-        <template v-if="filterRadarTypeOptions?.length">
-          <li v-for="(item, index) in filterRadarTypeOptions" :key="`${index}_${item.radarId}`">
-            <p>{{ item.radarType }}</p>
+        <template v-if="filterRadarModelOptions?.length">
+          <li
+            v-for="(item, index) in filterRadarModelOptions"
+            :key="`${index}_${item.radarModelId}`">
+            <p>{{ item.radarModel }}</p>
             <div>
               <img
                 src="./images/top.png"
                 @click="
-                  editRadarType({ radarId: item.radarId, radarType: item.radarType, top: 1 }, true)
+                  editRadarModel(
+                    { radarModelId: item.radarModelId, radarModel: item.radarModel, top: 1 },
+                    true
+                  )
                 " />
-              <el-popover trigger="click" @before-enter="editValue = item.radarType">
+              <el-popover trigger="click" @before-enter="editValue = item.radarModel">
                 <template #reference>
                   <img src="./images/edit.png" />
                 </template>
                 <el-input
                   v-model="editValue"
                   @keyup.enter="
-                    editRadarType({ radarId: item.radarId, radarType: editValue, top: item.top })
+                    editRadarModel({
+                      radarModelId: item.radarModelId,
+                      radarModel: editValue,
+                      top: item.top
+                    })
                   "
                   clearable />
               </el-popover>
               <el-popconfirm
-                :title="`确定删除雷达型号：${item.radarType} ？（关联 ${stationNum} 个台站）`"
-                @confirm="deleteRadarType({ radarId: item.radarId })"
-                @show="getStationNumByRadarType(item.radarId)"
+                :title="`确定删除雷达型号：${item.radarModel} ？（关联 ${stationNum} 个台站）`"
+                @confirm="deleteRadarModel({ radarModelId: item.radarModelId })"
+                @show="getStationNumByRadarModel(item.radarModelId)"
                 @hide="stationNum = '-'">
                 <template #reference>
                   <img src="./images/delete.png" />
@@ -56,12 +65,12 @@
 
 <script setup lang="ts">
 import { Select } from '@element-plus/icons-vue'
-import { getStationNumByRadarTypeApi } from '@/apis/station'
+import { getStationNumByRadarModelApi } from '@/apis/station'
 import {
-  addRadarTypeApi,
-  deleteRadarTypeApi,
-  editRadarTypeApi,
-  getRadarTypeListApi
+  addRadarModelApi,
+  deleteRadarModelApi,
+  editRadarModelApi,
+  getRadarModelListApi
 } from '@/apis/station'
 import type { IPickResponse } from '@/common/axios'
 import { repetitionKey, tipStateOptions, type ITipState } from './const'
@@ -85,30 +94,30 @@ const inputChange = () => {
 const tipState = ref<ITipState>('0')
 
 // 列表
-const radarTypeOptions = ref<IPickResponse<typeof getRadarTypeListApi>>()
+const radarModelOptions = ref<IPickResponse<typeof getRadarModelListApi>>()
 const loading = ref(false)
-const filterRadarTypeOptions = computed(() =>
-  radarTypeOptions.value?.filter(item => new RegExp(inputValue.value).test(item.radarType))
+const filterRadarModelOptions = computed(() =>
+  radarModelOptions.value?.filter(item => new RegExp(inputValue.value).test(item.radarModel))
 )
-const getRadarTypeList = async () => {
+const getRadarModelList = async () => {
   loading.value = true
   try {
-    const { data: res } = await getRadarTypeListApi()
-    radarTypeOptions.value = res
+    const { data: res } = await getRadarModelListApi()
+    radarModelOptions.value = res
   } catch (error: any) {
     console.error(error)
   } finally {
     loading.value = false
   }
 }
-getRadarTypeList()
+getRadarModelList()
 
 // 新增
-const addRadarType = async () => {
+const addRadarModel = async () => {
   if (inputValue.value) {
     loading.value = true
     try {
-      const { data: res } = await addRadarTypeApi({ radarType: inputValue.value })
+      const { data: res } = await addRadarModelApi({ radarModel: inputValue.value })
       if (repetitionKey.test(res)) {
         tipState.value = '3'
         ElMessage.warning(res)
@@ -121,7 +130,7 @@ const addRadarType = async () => {
       ElMessage.warning('新增雷达型号失败！')
     } finally {
       loading.value = false
-      getRadarTypeList()
+      getRadarModelList()
     }
   } else {
     ElMessage.warning('请输入雷达型号！')
@@ -130,10 +139,10 @@ const addRadarType = async () => {
 
 // 编辑
 const editValue = ref('')
-const editRadarType = async (data: Parameters<typeof editRadarTypeApi>[0], top?: boolean) => {
+const editRadarModel = async (data: Parameters<typeof editRadarModelApi>[0], top?: boolean) => {
   loading.value = true
   try {
-    const { data: res } = await editRadarTypeApi(data)
+    const { data: res } = await editRadarModelApi(data)
     if (repetitionKey.test(res)) {
       ElMessage.warning(res)
     } else {
@@ -144,31 +153,31 @@ const editRadarType = async (data: Parameters<typeof editRadarTypeApi>[0], top?:
     ElMessage.warning(`${top ? '置顶' : '编辑'}雷达型号失败！`)
   } finally {
     loading.value = false
-    getRadarTypeList()
+    getRadarModelList()
   }
 }
 
 // 删除
 const stationNum = ref<string | number>('-')
-const getStationNumByRadarType = async (radarId: string) => {
+const getStationNumByRadarModel = async (radarModelId: string) => {
   try {
-    const { data: res } = await getStationNumByRadarTypeApi({ radarId })
+    const { data: res } = await getStationNumByRadarModelApi({ radarModelId })
     stationNum.value = res
   } catch (error: any) {
     console.error(error)
   }
 }
-const deleteRadarType = async (data: Parameters<typeof deleteRadarTypeApi>[0]) => {
+const deleteRadarModel = async (data: Parameters<typeof deleteRadarModelApi>[0]) => {
   loading.value = true
   try {
-    await deleteRadarTypeApi(data)
+    await deleteRadarModelApi(data)
     ElMessage.success('删除雷达型号成功！')
   } catch (error: any) {
     console.error(error)
     ElMessage.warning('删除雷达型号失败！')
   } finally {
     loading.value = false
-    getRadarTypeList()
+    getRadarModelList()
   }
 }
 </script>

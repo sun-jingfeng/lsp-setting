@@ -14,8 +14,8 @@ export const stateOptions: { label: string; value: IProState }[] = [
 export const initFilterData = (): {
   radarAreaList?: string[]
   proState?: IProState
-  radarIdList?: string[]
+  radarModelIdList?: string[]
 } => ({
   radarAreaList: [],
-  radarIdList: []
+  radarModelIdList: []
 })

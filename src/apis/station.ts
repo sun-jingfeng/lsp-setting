@@ -17,14 +17,14 @@ import { cloneDeep } from 'lodash'
 // }
 
 // 获取雷达型号列表
-export const getRadarTypeListApi = () => {
-  return request<{ radarId: string; radarType: string; top: 0 | 1 }[]>({
+export const getRadarModelListApi = () => {
+  return request<{ radarModelId: string; radarModel: string; top: 0 | 1 }[]>({
     url: '/lsp-tianjin/radarType/select',
     method: 'post'
   }).then(res => {
     res.data = res.data.map((item: any) => ({
-      radarId: String(item.id),
-      radarType: item.radarType,
+      radarModelId: String(item.id),
+      radarModel: item.radarType,
       top: item.top
     }))
     return res
@@ -32,11 +32,13 @@ export const getRadarTypeListApi = () => {
 }
 
 // 新增雷达型号
-export const addRadarTypeApi = (params: { radarType: string }) => {
+export const addRadarModelApi = (params: { radarModel: string }) => {
   return request<string>({
     url: '/lsp-tianjin/radarType/add',
     method: 'post',
-    params
+    params: {
+      radarType: params.radarModel
+    }
   }).then(res => {
     // 数据处理
     return res
@@ -44,11 +46,19 @@ export const addRadarTypeApi = (params: { radarType: string }) => {
 }
 
 // 编辑雷达型号
-export const editRadarTypeApi = (data: { radarId: string; radarType: string; top: 0 | 1 }) => {
+export const editRadarModelApi = (data: {
+  radarModelId: string
+  radarModel: string
+  top: 0 | 1
+}) => {
   return request<string>({
     url: '/lsp-tianjin/radarType/update',
     method: 'post',
-    data
+    data: {
+      radarId: data.radarModelId,
+      radarType: data.radarModel,
+      top: data.top
+    }
   }).then(res => {
     // 数据处理
     return res
@@ -56,14 +66,14 @@ export const editRadarTypeApi = (data: { radarId: string; radarType: string; top
 }
 
 // 获取雷达型号的台站数量
-export const getStationNumByRadarTypeApi = (params: { radarId: string }) => {
+export const getStationNumByRadarModelApi = (params: { radarModelId: string }) => {
   return request<number>({
     url: '/lsp-tianjin/stationInfo/selectPage',
     method: 'post',
     params: {
       pageNum: 1,
       pageSize: 999,
-      radarTypeID: params.radarId
+      radarTypeID: params.radarModelId
     }
   }).then(res => {
     res.data = (res.data as any).records?.length ?? 0
@@ -72,11 +82,13 @@ export const getStationNumByRadarTypeApi = (params: { radarId: string }) => {
 }
 
 // 删除雷达型号
-export const deleteRadarTypeApi = (params: { radarId: string }) => {
+export const deleteRadarModelApi = (params: { radarModelId: string }) => {
   return request({
     url: '/lsp-tianjin/radarType/delete',
     method: 'get',
-    params
+    params: {
+      radarId: params.radarModelId
+    }
   }).then(res => {
     // 数据处理
     return res
@@ -103,7 +115,7 @@ export const getRadarAreaListApi = () => {
           longitude: String(item.lon),
           latitude: String(item.lat),
           altitude: String(item.alti),
-          radarId: String(item.radar_type_id),
+          radarModelId: String(item.radar_type_id),
           stationId: String(item.id),
           proState: item.real_time_flag
         } as any) ?? [])
@@ -134,7 +146,7 @@ export const getStationListApi = (params: {
   pageSize: number
   radarAreaList?: string[]
   proState?: IProState
-  radarIdList?: string[]
+  radarModelIdList?: string[]
 }) => {
   return request<{
     total: number
@@ -147,7 +159,7 @@ export const getStationListApi = (params: {
       pageSize: params.pageSize,
       province: params.radarAreaList?.join() || undefined,
       realTimeFlag: params.proState,
-      radarTypeID: params.radarIdList?.join() || undefined
+      radarTypeID: params.radarModelIdList?.join() || undefined
     }
   }).then(res => {
     res.data.records = res.data.records?.map(
@@ -160,7 +172,7 @@ export const getStationListApi = (params: {
           longitude: String(item.lon),
           latitude: String(item.lat),
           altitude: String(item.alti),
-          radarId: String(item.radar_type_id),
+          radarModelId: String(item.radar_type_id),
           stationId: String(item.id),
           proState: item.real_time_flag
         } as any) ?? [])
@@ -199,7 +211,7 @@ export const addOrEditStationApi = (data: IStation) => {
       lon: +data.longitude,
       lat: +data.latitude,
       alti: +data.altitude,
-      radar_type: data.radarId,
+      radar_type: data.radarModelId,
       id: data.stationId,
       real_time_flag: data.proState
     }
