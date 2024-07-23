@@ -11,6 +11,7 @@ export type IStation = {
   latitude: string
   altitude: string
   radarModelId: string
+  radarType: string
   stationId?: string
   proState?: IProState
 }

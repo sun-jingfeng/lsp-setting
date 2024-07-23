@@ -147,6 +147,7 @@ export const getStationListApi = (params: {
   radarAreaList?: string[]
   proState?: IProState
   radarModelIdList?: string[]
+  radarTypeList?: string[]
 }) => {
   return request<{
     total: number
@@ -159,7 +160,8 @@ export const getStationListApi = (params: {
       pageSize: params.pageSize,
       province: params.radarAreaList?.join() || undefined,
       realTimeFlag: params.proState,
-      radarTypeID: params.radarModelIdList?.join() || undefined
+      radarTypeID: params.radarModelIdList?.join() || undefined,
+      radar_classify: params.radarTypeList?.join() || undefined
     }
   }).then(res => {
     res.data.records = res.data.records?.map(
@@ -173,6 +175,7 @@ export const getStationListApi = (params: {
           latitude: String(item.lat),
           altitude: String(item.alti),
           radarModelId: String(item.radar_type_id),
+          radarType: item.radar_classify,
           stationId: String(item.id),
           proState: item.real_time_flag
         } as any) ?? [])
@@ -212,6 +215,7 @@ export const addOrEditStationApi = (data: IStation) => {
       lat: +data.latitude,
       alti: +data.altitude,
       radar_type: data.radarModelId,
+      radar_classify: data.radarType,
       id: data.stationId,
       real_time_flag: data.proState
     }

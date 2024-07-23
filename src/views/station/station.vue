@@ -34,8 +34,21 @@
               :label="item.radarModel"
               :value="item.radarModelId" />
           </el-select>
+          <span>雷达类型：</span>
+          <el-select
+            v-model="filterData.radarTypeList"
+            clearable
+            multiple
+            collapse-tags
+            collapse-tags-tooltip>
+            <el-option
+              v-for="(item, index) in radatTypeOptions"
+              :key="index"
+              :label="item.label"
+              :value="item.value" />
+          </el-select>
         </li>
-        <li>
+        <li class="right">
           <el-button type="primary" @click="getStationList">查询</el-button>
           <el-button type="warning" @click="resetFilter">重置</el-button>
         </li>
@@ -69,6 +82,11 @@
           <span>{{
             radarModelOptions?.find(item => item.radarModelId === row.radarModelId)?.radarModel
           }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="雷达类型">
+        <template #default="{ row }">
+          <span>{{ radatTypeOptions?.find(item => item.value === row.radarType)?.label }}</span>
         </template>
       </el-table-column>
       <el-table-column label="是否实时生产" width="200">
@@ -108,7 +126,7 @@
 <script setup lang="ts">
 import { getLabel } from '@/components/Layout/Navigation/const'
 import type { IProState } from './const'
-import { initFilterData, stateOptions } from './const'
+import { initFilterData, radatTypeOptions, stateOptions } from './const'
 import { CirclePlus } from '@element-plus/icons-vue'
 import Operate from './Operate/Operate.vue'
 import { getRadarAreaListApi } from '@/apis/station'
@@ -167,7 +185,8 @@ async function getStationList() {
       pageSize: pageSize.value,
       radarAreaList: filterData.value.radarAreaList,
       proState: filterData.value.proState,
-      radarModelIdList: filterData.value.radarModelIdList
+      radarModelIdList: filterData.value.radarModelIdList,
+      radarTypeList: filterData.value.radarTypeList
     })
     total.value = res.total
     stationList.value = res.records
@@ -183,6 +202,7 @@ const initFormData = ref<IStation>()
 const operateType = ref<IOperateType>('add')
 const showOperate = ref(false)
 const addStation = () => {
+  initFormData.value = undefined
   operateType.value = 'add'
   showOperate.value = true
 }
@@ -214,23 +234,27 @@ const changeProState = async (stationId: string, proState: IProState) => {
 }
 
 // 批量改变生产情况
-let selectedStationIdList: string[]
+let selectedStationIdList: string[] | undefined
 const handleSelectionChange = (
   i_stationList: IPickResponse<typeof getStationListApi>['records']
 ) => {
   selectedStationIdList = i_stationList.map(item => item.stationId ?? '')
 }
 const batchChangeProState = async (proState: IProState) => {
-  loading.value = true
-  try {
-    await changeProStateApi({ stationIdList: selectedStationIdList, proState })
-    loading.value = false
-    getStationList()
-    ElMessage.success('改变台站生产情况成功！')
-  } catch (error: any) {
-    ElMessage.warning('改变台站生产情况失败！')
-    loading.value = false
-    console.error(error)
+  if (selectedStationIdList?.length) {
+    loading.value = true
+    try {
+      await changeProStateApi({ stationIdList: selectedStationIdList, proState })
+      loading.value = false
+      getStationList()
+      ElMessage.success('改变台站生产情况成功！')
+    } catch (error: any) {
+      ElMessage.warning('改变台站生产情况失败！')
+      loading.value = false
+      console.error(error)
+    }
+  } else {
+    ElMessage.warning('请至少选中一个台站！')
   }
 }
 
@@ -282,16 +306,22 @@ const deleteStation = (stationId: string, stationName: string) => {
 
       > .left {
         display: flex;
-        align-items: center;
+        flex-wrap: wrap;
+        margin-bottom: -8px;
 
         > span {
-          margin: 0 10px 0 24px;
+          margin: 6px 10px 8px 24px;
         }
 
         > .el-select {
           width: 200px;
           height: 32px;
+          margin-bottom: 8px;
         }
+      }
+
+      > .right {
+        flex-shrink: 0;
       }
     }
   }

@@ -74,6 +74,15 @@
           </el-select>
           <img class="tag" src="./images/tag.png" @click="showRadar = true" />
         </el-form-item>
+        <el-form-item label="雷达类型：" prop="radarType">
+          <el-select v-model="formData.radarType" clearable>
+            <el-option
+              v-for="(item, index) in radatTypeOptions"
+              :key="index"
+              :label="item.label"
+              :value="item.value" />
+          </el-select>
+        </el-form-item>
       </el-form>
       <template #footer>
         <div class="dialog-footer">
@@ -96,6 +105,7 @@ import { addOrEditStationApi, getRadarModelListApi, sameVerifyApi } from '@/apis
 import type { IPickResponse } from '@/common/axios'
 import type { FormRules } from 'element-plus'
 import { ElMessage, type FormInstance } from 'element-plus'
+import { radatTypeOptions } from '../const'
 
 type IProps = {
   operateType: IOperateType
@@ -111,7 +121,8 @@ const props = withDefaults(defineProps<IProps>(), {
     longitude: '',
     latitude: '',
     altitude: '',
-    radarModelId: ''
+    radarModelId: '',
+    radarType: ''
   })
 })
 const emit = defineEmits<{
@@ -203,7 +214,8 @@ const formRules: FormRules<IStation> = {
   longitude: [{ required: true, message: '请输入', trigger: 'change' }],
   latitude: [{ required: true, message: '请输入', trigger: 'change' }],
   altitude: [{ required: true, message: '请输入', trigger: 'change' }],
-  radarModelId: [{ required: true, message: '请选择', trigger: 'change' }]
+  radarModelId: [{ required: true, message: '请选择', trigger: 'change' }],
+  radarType: [{ required: true, message: '请选择', trigger: 'change' }]
 }
 
 // 提交
