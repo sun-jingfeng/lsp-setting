@@ -74,6 +74,7 @@ import Navigation from './Navigation/Navigation.vue'
     flex: 1;
     width: 0;
     padding: 16px;
+    overflow: auto;
   }
 }
 </style>

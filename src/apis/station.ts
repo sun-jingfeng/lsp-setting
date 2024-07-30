@@ -72,7 +72,7 @@ export const getStationNumByRadarModelApi = (params: { radarModelId: string }) =
     method: 'post',
     params: {
       pageNum: 1,
-      pageSize: 999,
+      pageSize: 99999,
       radarTypeID: params.radarModelId
     }
   }).then(res => {
@@ -102,7 +102,7 @@ export const getRadarAreaListApi = () => {
     method: 'post',
     params: {
       pageNum: 1,
-      pageSize: 999
+      pageSize: 99999
     }
   }).then(res => {
     const records: IStation[] = (res as any).data.records?.map(
@@ -148,6 +148,7 @@ export const getStationListApi = (params: {
   proState?: IProState
   radarModelIdList?: string[]
   radarTypeList?: string[]
+  nameOrNo?: string
 }) => {
   return request<{
     total: number
@@ -161,7 +162,8 @@ export const getStationListApi = (params: {
       province: params.radarAreaList?.join() || undefined,
       realTimeFlag: params.proState,
       radarTypeID: params.radarModelIdList?.join() || undefined,
-      radar_classify: params.radarTypeList?.join() || undefined
+      radar_classify: params.radarTypeList?.join() || undefined,
+      fuzzy: params.nameOrNo
     }
   }).then(res => {
     res.data.records = res.data.records?.map(
@@ -191,7 +193,7 @@ export const sameVerifyApi = (params: { stationNo?: string; stationName?: string
     method: 'post',
     params: {
       pageNum: 1,
-      pageSize: 999,
+      pageSize: 99999,
       stationNo: params.stationNo,
       stationName: params.stationName
     }

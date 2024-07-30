@@ -1,5 +1,5 @@
 <template>
-  <div class="station" v-loading="loading">
+  <div class="station g-page" v-loading="loading">
     <div class="top">
       <p class="g-decorate">{{ getLabel() }}</p>
       <ul class="filter">
@@ -287,9 +287,6 @@ const deleteStation = (stationId: string, stationName: string) => {
 .station {
   display: flex;
   flex-direction: column;
-  height: 100%;
-  padding: 16px;
-  background-color: var(--g-bg-2);
 
   > .top {
     display: flex;

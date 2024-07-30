@@ -38,6 +38,8 @@ html.dark {
 
   .el-select {
     --el-border-color-hover: #6f8cd0 !important;
+    --el-color-info-light-9: #102c4e !important;;
+    --el-color-info: var(--g-text-color) !important;;
   }
 
   .el-input {
@@ -60,5 +62,24 @@ html.dark {
 
   .el-menu-item{
     --el-menu-hover-bg-color: #183860 !important;
+  }
+
+  .el-checkbox{
+    --el-checkbox-input-border: 1px solid #e5f0ff !important;
+  }
+
+  .el-cascader{
+    --el-cascader-tag-background: #102c4e !important;
+    --el-color-info: var(--g-text-color) !important;
+  }
+
+  .el-cascader__dropdown{
+    --el-bg-color-overlay: #1d3c5f !important;
+  }
+
+  .el-date-editor{
+    --el-input-border-color:#102c4e !important;
+    --el-input-bg-color: #0b2341 !important;
+    --el-text-color-placeholder: var(--placeholder-color) !important;
   }
 }
