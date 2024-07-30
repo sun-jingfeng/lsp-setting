@@ -72,7 +72,7 @@
               :label="item.radarModel"
               :value="item.radarModelId" />
           </el-select>
-          <img class="tag" src="./images/tag.png" @click="showRadar = true" />
+          <OperateList />
         </el-form-item>
         <el-form-item label="雷达类型：" prop="radarType">
           <el-select v-model="formData.radarType" clearable>
@@ -92,7 +92,6 @@
       </template>
     </el-dialog>
   </div>
-  <Radar v-if="showRadar" @closeRadar="closeRadar" />
 </template>
 
 <script setup lang="ts">
@@ -100,12 +99,12 @@ import { ref } from 'vue'
 import type { IStation } from './const'
 import { areaList, repetitionKey, type IOperateType } from './const'
 import { formatNum } from '@/common/utils'
-import Radar from './Radar/Radar.vue'
 import { addOrEditStationApi, getRadarModelListApi, sameVerifyApi } from '@/apis/station'
 import type { IPickResponse } from '@/common/axios'
 import type { FormRules } from 'element-plus'
 import { ElMessage, type FormInstance } from 'element-plus'
 import { radatTypeOptions } from '../const'
+import OperateList from '@/components/OperateList/OperateList.vue'
 
 type IProps = {
   operateType: IOperateType
@@ -242,14 +241,6 @@ const onSubmit = () => {
     }
   })
 }
-
-// 雷达型号管理弹窗
-const showRadar = ref(false)
-const closeRadar = () => {
-  setTimeout(() => {
-    showRadar.value = false
-  }, 200)
-}
 </script>
 
 <style scoped lang="scss">
@@ -265,12 +256,6 @@ const closeRadar = () => {
     .el-select {
       width: 200px;
       margin-right: 10px;
-    }
-
-    .tag {
-      padding: 2px;
-      pointer-events: initial;
-      cursor: pointer;
     }
   }
 

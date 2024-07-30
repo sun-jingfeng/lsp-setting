@@ -25,7 +25,7 @@ import Content3 from './Content3/Content3.vue'
 import Step from './Step/Step.vue'
 
 // 进度条
-const activeStep = ref(2)
+const activeStep = ref(3)
 
 // 内容1
 const content1Ref = ref<InstanceType<typeof Content1>>()

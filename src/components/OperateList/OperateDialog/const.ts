@@ -1,5 +1,9 @@
 export type ITipState = '0' | '1' | '2' | '3'
 
+export type IPageType = 'radar' | 'disaster'
+
+export const getName = () => {}
+
 export const tipStateOptions: {
   tipState: ITipState
   msg?: string

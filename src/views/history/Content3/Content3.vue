@@ -7,10 +7,13 @@
         :label="item.label"
         :value="item.value" />
     </el-select>
+    <OperateList type="disaster" />
   </div>
 </template>
 
 <script setup lang="ts">
+import OperateList from '@/components/OperateList/OperateList.vue'
+
 const selectValue = ref('')
 
 const options = [
@@ -39,10 +42,13 @@ const options = [
 
 <style scoped lang="scss">
 .content3 {
+  display: flex;
+  align-items: center;
   padding: 12px 0;
 
   > .el-select {
     width: 400px;
+    margin-right: 10px;
   }
 }
 </style>
