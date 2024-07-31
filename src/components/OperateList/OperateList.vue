@@ -1,7 +1,7 @@
 <template>
   <div class="operate-list">
     <img class="tag" src="./images/tag.png" @click="showRadar = true" />
-    <OperateDialog v-if="showRadar" @closeRadar="closeRadar" :type="props.pageType" />
+    <OperateDialog v-if="showRadar" @closeRadar="closeRadar" :pageType="props.pageType" />
   </div>
 </template>
 

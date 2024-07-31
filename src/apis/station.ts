@@ -18,13 +18,13 @@ import { cloneDeep } from 'lodash'
 
 // 获取雷达型号列表
 export const getRadarModelListApi = () => {
-  return request<{ radarModelId: string; radarModel: string; top: 0 | 1 }[]>({
+  return request<{ dataId: string; dataContent: string; top: 0 | 1 }[]>({
     url: '/lsp-tianjin/radarType/select',
     method: 'post'
   }).then(res => {
     res.data = res.data.map((item: any) => ({
-      radarModelId: String(item.id),
-      radarModel: item.radarType,
+      dataId: String(item.id),
+      dataContent: item.radarType,
       top: item.top
     }))
     return res
@@ -32,12 +32,12 @@ export const getRadarModelListApi = () => {
 }
 
 // 新增雷达型号
-export const addRadarModelApi = (params: { radarModel: string }) => {
+export const addRadarModelApi = (params: { dataContent: string }) => {
   return request<string>({
     url: '/lsp-tianjin/radarType/add',
     method: 'post',
     params: {
-      radarType: params.radarModel
+      radarType: params.dataContent
     }
   }).then(res => {
     // 数据处理
@@ -46,17 +46,13 @@ export const addRadarModelApi = (params: { radarModel: string }) => {
 }
 
 // 编辑雷达型号
-export const editRadarModelApi = (data: {
-  radarModelId: string
-  radarModel: string
-  top: 0 | 1
-}) => {
+export const editRadarModelApi = (data: { dataId: string; dataContent: string; top: 0 | 1 }) => {
   return request<string>({
     url: '/lsp-tianjin/radarType/update',
     method: 'post',
     data: {
-      radarId: data.radarModelId,
-      radarType: data.radarModel,
+      id: data.dataId,
+      radarType: data.dataContent,
       top: data.top
     }
   }).then(res => {
@@ -66,14 +62,14 @@ export const editRadarModelApi = (data: {
 }
 
 // 获取雷达型号的台站数量
-export const getStationNumByRadarModelApi = (params: { radarModelId: string }) => {
+export const getNumByRadarModelApi = (params: { dataId: string }) => {
   return request<number>({
     url: '/lsp-tianjin/stationInfo/selectPage',
     method: 'post',
     params: {
       pageNum: 1,
       pageSize: 99999,
-      radarTypeID: params.radarModelId
+      radarTypeID: params.dataId
     }
   }).then(res => {
     res.data = (res.data as any).records?.length ?? 0
@@ -82,12 +78,12 @@ export const getStationNumByRadarModelApi = (params: { radarModelId: string }) =
 }
 
 // 删除雷达型号
-export const deleteRadarModelApi = (params: { radarModelId: string }) => {
+export const deleteRadarModelApi = (params: { dataId: string }) => {
   return request({
     url: '/lsp-tianjin/radarType/delete',
     method: 'get',
     params: {
-      radarId: params.radarModelId
+      radarId: params.dataId
     }
   }).then(res => {
     // 数据处理

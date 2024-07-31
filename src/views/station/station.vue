@@ -31,8 +31,8 @@
             <el-option
               v-for="(item, index) in radarModelOptions"
               :key="index"
-              :label="item.radarModel"
-              :value="item.radarModelId" />
+              :label="item.dataContent"
+              :value="item.dataId" />
           </el-select>
           <span>雷达类型：</span>
           <el-select
@@ -80,7 +80,7 @@
       <el-table-column label="雷达型号">
         <template #default="{ row }">
           <span>{{
-            radarModelOptions?.find(item => item.radarModelId === row.radarModelId)?.radarModel
+            radarModelOptions?.find(item => item.dataId === row.radarModelId)?.dataContent
           }}</span>
         </template>
       </el-table-column>
@@ -260,7 +260,7 @@ const batchChangeProState = async (proState: IProState) => {
 
 // 删除
 const deleteStation = (stationId: string, stationName: string) => {
-  ElMessageBox.confirm(`确定删除站台：${stationName} ？`, 'Warning', {
+  ElMessageBox.confirm(`确定删除站台：${stationName} ？`, '警告', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
     type: 'warning'

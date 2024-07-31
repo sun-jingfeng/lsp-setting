@@ -5,13 +5,12 @@
       :close-on-click-modal="false"
       :close-on-press-escape="false"
       @close="emit('closeRadar')"
-      :title="props.pageType === 'radar' ? '雷达型号管理' : '灾害标签管理'">
+      :title="`${getPageName(props.pageType)}管理`">
       <div class="content">
         <el-input
           v-model="inputValue"
           @keyup.enter="addRadarModel"
           @input="inputChange"
-          clearable
           :validate-event="false">
           <template #suffix>
             <el-icon @click="addRadarModel"><Select /></el-icon>
@@ -19,26 +18,30 @@
         </el-input>
         <p
           class="tip"
-          :class="[tipStateOptions.find(item => item.tipState === tipState)?.className]">
-          {{ tipStateOptions.find(item => item.tipState === tipState)?.msg }}
+          :class="[
+            getTipStateOptions(props.pageType).find(item => item.tipState === tipState)?.className
+          ]">
+          {{ getTipStateOptions(props.pageType).find(item => item.tipState === tipState)?.msg }}
         </p>
-        <h4 class="g-decorate">已有雷达型号（{{ filterRadarModelOptions?.length }}）</h4>
+        <h4 class="g-decorate">
+          已有{{ getPageName(props.pageType) }}（{{ filteredDataList?.length }}）
+        </h4>
         <ul v-loading="loading">
-          <template v-if="filterRadarModelOptions?.length">
+          <template v-if="filteredDataList?.length">
             <li
-              v-for="(item, index) in filterRadarModelOptions"
-              :key="`${index}_${item.radarModelId}`">
-              <p>{{ item.radarModel }}</p>
+              v-for="(item, index) in filteredDataList"
+              :key="`${index}_${item.dataId}_${item.dataContent}`">
+              <p>{{ item.dataContent }}</p>
               <div>
                 <img
                   src="./images/top.png"
                   @click="
                     editRadarModel(
-                      { radarModelId: item.radarModelId, radarModel: item.radarModel, top: 1 },
+                      { dataId: item.dataId, dataContent: item.dataContent, top: 1 },
                       true
                     )
                   " />
-                <el-popover trigger="click" @before-enter="editValue = item.radarModel">
+                <el-popover trigger="click" @before-enter="editValue = item.dataContent">
                   <template #reference>
                     <img src="./images/edit.png" />
                   </template>
@@ -46,18 +49,21 @@
                     v-model="editValue"
                     @keyup.enter="
                       editRadarModel({
-                        radarModelId: item.radarModelId,
-                        radarModel: editValue,
+                        dataId: item.dataId,
+                        dataContent: editValue,
                         top: item.top
                       })
                     "
                     clearable />
                 </el-popover>
                 <el-popconfirm
-                  :title="`确定删除雷达型号：${item.radarModel} ？（关联 ${stationNum} 个台站）`"
-                  @confirm="deleteRadarModel({ radarModelId: item.radarModelId })"
-                  @show="getStationNumByRadarModel(item.radarModelId)"
-                  @hide="stationNum = '-'">
+                  :title="`确定删除${getPageName(props.pageType)}：${
+                    item.dataContent
+                  } ？（关联 ${stationNum} 个${props.pageType === 'radar' ? '台站' : '回算'}）`"
+                  @confirm="deleteData({ dataId: item.dataId })"
+                  @show="getNumByData(item.dataId)"
+                  @hide="stationNum = '-'"
+                  width="220">
                   <template #reference>
                     <img src="./images/delete.png" />
                   </template>
@@ -74,17 +80,24 @@
 
 <script setup lang="ts">
 import { Select } from '@element-plus/icons-vue'
-import { getStationNumByRadarModelApi } from '@/apis/station'
 import {
   addRadarModelApi,
   deleteRadarModelApi,
   editRadarModelApi,
-  getRadarModelListApi
+  getRadarModelListApi,
+  getNumByRadarModelApi
 } from '@/apis/station'
 import type { IPickResponse } from '@/common/axios'
 import type { IPageType } from './const'
-import { repetitionKey, tipStateOptions, type ITipState } from './const'
+import { getPageName, repetitionKey, getTipStateOptions, type ITipState } from './const'
 import { ElMessage } from 'element-plus'
+import {
+  addDisasterTagApi,
+  deleteDisasterTaglApi,
+  editDisasterTaglApi,
+  getDisasterTaglListApi,
+  getNumByDisasterTaglApi
+} from '@/apis/history'
 
 type IProps = {
   pageType?: IPageType
@@ -110,91 +123,106 @@ const inputChange = () => {
 // 提示状态
 const tipState = ref<ITipState>('0')
 
-// 列表
-const radarModelOptions = ref<IPickResponse<typeof getRadarModelListApi>>()
+// 数据列表
+const dataList = ref<
+  IPickResponse<typeof getRadarModelListApi> | IPickResponse<typeof getDisasterTaglListApi>
+>([])
 const loading = ref(false)
-const filterRadarModelOptions = computed(() =>
-  radarModelOptions.value?.filter(item => new RegExp(inputValue.value).test(item.radarModel))
+const filteredDataList = computed(() =>
+  dataList.value?.filter(item => new RegExp(inputValue.value).test(item.dataContent))
 )
-const getRadarModelList = async () => {
+const getDataList = async () => {
   loading.value = true
   try {
-    const { data: res } = await getRadarModelListApi()
-    radarModelOptions.value = res
+    const { data: res } = await (props.pageType === 'radar'
+      ? getRadarModelListApi
+      : getDisasterTaglListApi)()
+    dataList.value = res
   } catch (error: any) {
     console.error(error)
   } finally {
     loading.value = false
   }
 }
-getRadarModelList()
+getDataList()
 
 // 新增
 const addRadarModel = async () => {
   if (inputValue.value) {
     loading.value = true
     try {
-      const { data: res } = await addRadarModelApi({ radarModel: inputValue.value })
+      const { data: res } = await (props.pageType === 'radar'
+        ? addRadarModelApi
+        : addDisasterTagApi)({ dataContent: inputValue.value })
       if (repetitionKey.test(res)) {
         tipState.value = '3'
         ElMessage.warning(res)
       } else {
         tipState.value = '2'
-        ElMessage.success('新增雷达型号成功！')
+        ElMessage.success(`新增${getPageName(props.pageType)}成功！`)
       }
     } catch (error: any) {
       console.error(error)
-      ElMessage.warning('新增雷达型号失败！')
+      ElMessage.warning(`新增${getPageName(props.pageType)}失败！`)
     } finally {
       loading.value = false
-      getRadarModelList()
+      getDataList()
     }
   } else {
-    ElMessage.warning('请输入雷达型号！')
+    ElMessage.warning(`请输入${getPageName(props.pageType)}！`)
   }
 }
 
 // 编辑
 const editValue = ref('')
-const editRadarModel = async (data: Parameters<typeof editRadarModelApi>[0], top?: boolean) => {
+const editRadarModel = async (
+  data: Parameters<typeof editRadarModelApi>[0] | Parameters<typeof editDisasterTaglApi>[0],
+  top?: boolean
+) => {
   loading.value = true
   try {
-    const { data: res } = await editRadarModelApi(data)
+    const { data: res } = await (props.pageType === 'radar'
+      ? editRadarModelApi
+      : editDisasterTaglApi)(data)
     if (repetitionKey.test(res)) {
       ElMessage.warning(res)
     } else {
-      ElMessage.success(`${top ? '置顶' : '编辑'}雷达型号成功！`)
+      ElMessage.success(`${top ? '置顶' : '编辑'}${getPageName(props.pageType)}成功！`)
     }
   } catch (error: any) {
     console.error(error)
-    ElMessage.warning(`${top ? '置顶' : '编辑'}雷达型号失败！`)
+    ElMessage.warning(`${top ? '置顶' : '编辑'}${getPageName(props.pageType)}失败！`)
   } finally {
     loading.value = false
-    getRadarModelList()
+    getDataList()
   }
 }
 
 // 删除
 const stationNum = ref<string | number>('-')
-const getStationNumByRadarModel = async (radarModelId: string) => {
+const getNumByData = async (dataId: string) => {
   try {
-    const { data: res } = await getStationNumByRadarModelApi({ radarModelId })
+    const { data: res } = await (props.pageType === 'radar'
+      ? getNumByRadarModelApi
+      : getNumByDisasterTaglApi)({ dataId })
     stationNum.value = res
   } catch (error: any) {
     console.error(error)
   }
 }
-const deleteRadarModel = async (data: Parameters<typeof deleteRadarModelApi>[0]) => {
+const deleteData = async (
+  data: Parameters<typeof deleteRadarModelApi>[0] | Parameters<typeof deleteDisasterTaglApi>[0]
+) => {
   loading.value = true
   try {
-    await deleteRadarModelApi(data)
-    ElMessage.success('删除雷达型号成功！')
+    await (props.pageType === 'radar' ? deleteRadarModelApi : deleteDisasterTaglApi)(data)
+    ElMessage.success(`删除${getPageName(props.pageType)}成功！`)
   } catch (error: any) {
     console.error(error)
-    ElMessage.warning('删除雷达型号失败！')
+    ElMessage.warning(`删除${getPageName(props.pageType)}失败！`)
   } finally {
     loading.value = false
-    getRadarModelList()
+    getDataList()
   }
 }
 </script>

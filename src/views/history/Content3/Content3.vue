@@ -1,43 +1,39 @@
 <template>
   <div class="content3">
-    <el-select v-model="selectValue" clearable filterable multiple>
+    <el-select v-model="disasterTags" clearable filterable multiple>
       <el-option
-        v-for="(item, index) in options"
+        v-for="(item, index) in disasterTaglList"
         :key="index"
-        :label="item.label"
-        :value="item.value" />
+        :label="item.dataContent"
+        :value="item.dataId" />
     </el-select>
-    <OperateList type="disaster" />
+    <OperateList pageType="disaster" />
   </div>
 </template>
 
 <script setup lang="ts">
+import { getDisasterTaglListApi } from '@/apis/history'
+import type { IPickResponse } from '@/common/axios'
 import OperateList from '@/components/OperateList/OperateList.vue'
 
-const selectValue = ref('')
+// 选中
+const disasterTags = ref<string[]>([])
 
-const options = [
-  {
-    value: 'Option1',
-    label: 'Option1'
-  },
-  {
-    value: 'Option2',
-    label: 'Option2'
-  },
-  {
-    value: 'Option3',
-    label: 'Option3'
-  },
-  {
-    value: 'Option4',
-    label: 'Option4'
-  },
-  {
-    value: 'Option5',
-    label: 'Option5'
+// 列表
+const disasterTaglList = ref<IPickResponse<typeof getDisasterTaglListApi>>([])
+const getDisasterTaglList = async () => {
+  try {
+    const { data: res } = await getDisasterTaglListApi()
+    disasterTaglList.value = res
+  } catch (error: any) {
+    console.error(error)
   }
-]
+}
+getDisasterTaglList()
+
+defineExpose({
+  disasterTags
+})
 </script>
 
 <style scoped lang="scss">

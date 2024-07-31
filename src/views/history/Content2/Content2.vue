@@ -4,6 +4,7 @@
       v-model="dateTimeRange"
       type="datetimerange"
       range-separator="至"
+      :format="dateFormat2"
       :value-format="dateFormat1"
       start-placeholder="开始时间"
       :prefix-icon="Calendar"
@@ -12,7 +13,7 @@
 </template>
 
 <script setup lang="ts">
-import { dateFormat1 } from '@/common/date'
+import { dateFormat1, dateFormat2 } from '@/common/date'
 import { Calendar } from '@element-plus/icons-vue'
 import { dayjs, ElMessage } from 'element-plus'
 
@@ -21,11 +22,11 @@ watch(
   dateTimeRange,
   () => {
     if (dateTimeRange.value.every(item => Boolean(item))) {
-      if (dayjs(dateTimeRange.value[0]).add(8, 'hour').isBefore(dayjs(dateTimeRange.value[1]))) {
+      if (dayjs(dateTimeRange.value[0]).add(12, 'hour').isBefore(dayjs(dateTimeRange.value[1]))) {
         ElMessage.warning('最多支持12小时范围内的历史回算！')
         dateTimeRange.value = ['', '']
       }
-      if (dayjs(dateTimeRange.value[0]).isBefore(dayjs(dateTimeRange.value[1]))) {
+      if (dayjs(dateTimeRange.value[0]).isAfter(dayjs(dateTimeRange.value[1]))) {
         ElMessage.warning('结束时间不得早于开始时间！')
         dateTimeRange.value = ['', '']
       }

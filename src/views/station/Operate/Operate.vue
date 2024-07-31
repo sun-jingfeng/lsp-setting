@@ -69,8 +69,8 @@
             <el-option
               v-for="(item, index) in radarModelOptions"
               :key="index"
-              :label="item.radarModel"
-              :value="item.radarModelId" />
+              :label="item.dataContent"
+              :value="item.dataId" />
           </el-select>
           <OperateList />
         </el-form-item>

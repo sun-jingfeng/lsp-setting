@@ -43,12 +43,12 @@
               <li
                 v-for="(item, index) in leftStationList"
                 :key="index"
-                :class="{ checked: rightCheckedStations.has(item.stationId!)}">
+                :class="{ checked: rightCheckedStations.has(item.stationNo!)}">
                 <div class="selection">
                   <el-checkbox-group
                     v-model="leftCheckedStations"
                     @change="handleCheckedCitiesChange">
-                    <el-checkbox :value="item.stationId" />
+                    <el-checkbox :value="item.stationNo" />
                   </el-checkbox-group>
                 </div>
                 <div>{{ item.stationName }}</div>
@@ -89,7 +89,7 @@
                 <div>{{ item.stationName }}</div>
                 <div>{{ item.stationNo }}</div>
                 <div>
-                  <el-icon @click="rightCheckedStations.delete(item.stationId!)"
+                  <el-icon @click="rightCheckedStations.delete(item.stationNo!)"
                     ><CloseBold
                   /></el-icon>
                 </div>
@@ -101,7 +101,7 @@
     </div>
     <div class="title">雷达产品选择</div>
     <el-cascader
-      v-model="radarProductsList"
+      v-model="radarProducts"
       :options="radarProductOptions"
       :props="{ multiple: true, emitPath: false, expandTrigger: 'hover' }"
       clearable />
@@ -167,7 +167,7 @@ const resetCheck = () => {
   leftCheckedStations.value = []
 }
 const handleCheckAllChange = (val: boolean) => {
-  leftCheckedStations.value = val ? leftStationList.value.map(item => item.stationId!) : []
+  leftCheckedStations.value = val ? leftStationList.value.map(item => item.stationNo!) : []
   isIndeterminate.value = false
 }
 const handleCheckedCitiesChange = (value: string[]) => {
@@ -202,7 +202,7 @@ watch(rightCheckedStations, getFilteredStationList, { deep: true, immediate: tru
 function getFilteredStationList() {
   const regExp = new RegExp(rightInputValue.value, 'i')
   filteredStationList.value = [...rightCheckedStations.value]
-    .map(item => rightStationList.value.find(item2 => item2.stationId! === item))
+    .map(item => rightStationList.value.find(item2 => item2.stationNo! === item))
     .filter(
       item => item && (regExp.test(item.stationName) || regExp.test(item.stationNo))
     ) as IPickResponse<typeof getStationListApi>['records']
@@ -222,10 +222,11 @@ getRightStationList()
 // 右 - 结束
 
 // 雷达产品
-const radarProductsList = ref([])
+const radarProducts = ref<string[]>([])
 
 defineExpose({
-  checkedStations: rightCheckedStations
+  stations: rightCheckedStations,
+  radarProducts
 })
 </script>
 
