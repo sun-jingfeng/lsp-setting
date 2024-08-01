@@ -61,7 +61,7 @@
             @update:modelValue="formData.altitude = formatNum($event)"
             clearable
             placeholder="请输入">
-            <template #append>km</template>
+            <template #append>m</template>
           </el-input>
         </el-form-item>
         <el-form-item label="雷达型号：" prop="radarModelId">
@@ -210,8 +210,44 @@ const formRules: FormRules<IStation> = {
   ],
   area: [{ required: true, message: '请选择', trigger: 'change' }],
   province: [{ required: true, message: '请选择', trigger: 'change' }],
-  longitude: [{ required: true, message: '请输入', trigger: 'change' }],
-  latitude: [{ required: true, message: '请输入', trigger: 'change' }],
+  longitude: [
+    { required: true, message: '请输入', trigger: 'change' },
+    {
+      validator: (rule, value, callback) => {
+        const verify = () => callback(new Error('请输入10进制经度，-180~180'))
+        if (value === '') {
+          verify()
+          return
+        }
+        const numValue = +value
+        if (isNaN(numValue) || numValue < -180 || numValue > 180) {
+          verify()
+          return
+        }
+        callback()
+      },
+      trigger: 'change'
+    }
+  ],
+  latitude: [
+    { required: true, message: '请输入', trigger: 'change' },
+    {
+      validator: (rule, value, callback) => {
+        const verify = () => callback(new Error('请输入10进制纬度，-90~90'))
+        if (value === '') {
+          verify()
+          return
+        }
+        const numValue = +value
+        if (isNaN(numValue) || numValue < -90 || numValue > 90) {
+          verify()
+          return
+        }
+        callback()
+      },
+      trigger: 'change'
+    }
+  ],
   altitude: [{ required: true, message: '请输入', trigger: 'change' }],
   radarModelId: [{ required: true, message: '请选择', trigger: 'change' }],
   radarType: [{ required: true, message: '请选择', trigger: 'change' }]

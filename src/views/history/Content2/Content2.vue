@@ -1,7 +1,8 @@
 <template>
   <div class="content2">
     <el-date-picker
-      v-model="dateTimeRange"
+      :modelValue="dateTimeRange"
+      @update:modelValue="dateTimeRange = $event ?? ['', '']"
       type="datetimerange"
       range-separator="至"
       :format="dateFormat2"
@@ -45,6 +46,6 @@ defineExpose({
 
 <style scoped lang="scss">
 .content2 {
-  padding: 12px 0;
+  padding: 18px 0;
 }
 </style>

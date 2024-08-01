@@ -51,10 +51,10 @@ const disasterTags = computed(() => content3Ref.value?.disasterTags)
 // 提交
 const loading = ref(false)
 const submit = () => {
-  ElMessageBox.confirm('确定新增历史回算？', '警告', {
+  ElMessageBox.confirm('确定新增历史回算？', '新增回算', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
-    type: 'warning'
+    type: 'info'
   })
     .then(async () => {
       if (

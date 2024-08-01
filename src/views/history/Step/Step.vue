@@ -115,7 +115,7 @@ const emit = defineEmits<{
       }
 
       > .control {
-        padding-top: 8px;
+        padding: 8px 0 24px;
 
         > .el-button {
           width: 84px;

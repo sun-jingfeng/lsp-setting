@@ -40,7 +40,7 @@ defineExpose({
 .content3 {
   display: flex;
   align-items: center;
-  padding: 12px 0;
+  padding: 18px 0;
 
   > .el-select {
     width: 400px;

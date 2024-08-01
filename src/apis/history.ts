@@ -55,7 +55,10 @@ export const getProvinceListApi = () => {
         item.label = `${item.label}(${item.num})`
       })
     }
-    res.data = c_areaList.reduce((acc, cur) => [...acc, ...(cur.children ?? [])], [] as IAreaList)
+    res.data = [
+      { label: `全国(${records.length})`, value: '全国' },
+      ...c_areaList.reduce((acc, cur) => [...acc, ...(cur.children ?? [])], [] as IAreaList)
+    ]
     return res
   })
 }

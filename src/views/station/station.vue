@@ -12,7 +12,8 @@
             collapse-tags
             collapse-tags-tooltip
             show-checkbox
-            clearable />
+            clearable
+            :default-expanded-keys="['全部']" />
           <span>生产情况：</span>
           <el-select v-model="filterData.proState" clearable>
             <el-option
@@ -94,9 +95,12 @@
           <el-radio-group
             :modelValue="row.proState"
             @change="changeProState(row.stationId, $event as IProState)">
-            <el-radio v-for="item in stateOptions" :key="item.value" :value="item.value">{{
-              item.label
-            }}</el-radio>
+            <el-radio
+              v-for="item in stateOptions.filter(item => item.value !== -1)"
+              :key="item.value"
+              :value="item.value"
+              >{{ item.label }}</el-radio
+            >
           </el-radio-group>
         </template>
       </el-table-column>
@@ -260,7 +264,7 @@ const batchChangeProState = async (proState: IProState) => {
 
 // 删除
 const deleteStation = (stationId: string, stationName: string) => {
-  ElMessageBox.confirm(`确定删除站台：${stationName} ？`, '警告', {
+  ElMessageBox.confirm(`确定删除站台：${stationName} ？`, '删除', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
     type: 'warning'

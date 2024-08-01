@@ -4,7 +4,7 @@
       <div class="title">
         <img src="./images/logo.png" />
         <div>
-          <img src="./images/title.png" />
+          <img v-if="showLogo" src="./images/title.png" />
           <p>{{ CONFIG.appName }}</p>
         </div>
       </div>
@@ -30,6 +30,8 @@
 import { CONFIG } from '@/common/const'
 import { RouterView } from 'vue-router'
 import Navigation from './Navigation/Navigation.vue'
+
+const showLogo = import.meta.env.MODE !== 'production'
 </script>
 
 <style scoped lang="scss">

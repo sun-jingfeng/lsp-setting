@@ -115,6 +115,7 @@ import type { IPickResponse } from '@/common/axios'
 import type { IAreaList } from '@/views/station/Operate/const'
 import { ArrowRight, Search } from '@element-plus/icons-vue'
 import { checkLimit, radarProductOptions } from './const'
+import type { CheckboxValueType } from 'element-plus'
 import { ElMessage } from 'element-plus'
 
 // 左 - 开始
@@ -166,11 +167,11 @@ const resetCheck = () => {
   isIndeterminate.value = false
   leftCheckedStations.value = []
 }
-const handleCheckAllChange = (val: boolean) => {
+const handleCheckAllChange = (val: CheckboxValueType) => {
   leftCheckedStations.value = val ? leftStationList.value.map(item => item.stationNo!) : []
   isIndeterminate.value = false
 }
-const handleCheckedCitiesChange = (value: string[]) => {
+const handleCheckedCitiesChange = (value: CheckboxValueType[]) => {
   const checkedCount = value.length
   checkAll.value = checkedCount === leftStationList.value.length
   isIndeterminate.value = checkedCount > 0 && checkedCount < leftStationList.value.length
@@ -232,7 +233,8 @@ defineExpose({
 
 <style scoped lang="scss">
 .content1 {
-  padding: 12px 0;
+  padding: 18px 0;
+  margin-top: -8px;
 
   > .title {
     margin: 8px 0;

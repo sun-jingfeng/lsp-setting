@@ -3,7 +3,7 @@
     <template v-for="(item, index) in navigation" :key="index">
       <el-sub-menu v-if="item.children?.length" :key="index" :index="String(index)">
         <template #title>
-          <img :src="getImgSrc(imgPath, item.label)" />
+          <img class="prefix" :src="getImgSrc(imgPath, item.label)" />
           <span>{{ item.label }}</span>
         </template>
         <el-menu-item
@@ -11,13 +11,15 @@
           :key="index2"
           :index="`${index}-${index2}`"
           @click="$router.push({ name: item2.routeName })">
-          <img :src="getImgSrc(imgPath, item2.label)" />
+          <img class="prefix" :src="getImgSrc(imgPath, item2.label)" />
           <span>{{ item2.label }}</span>
+          <img class="suffix" src="./images/active.png" />
         </el-menu-item>
       </el-sub-menu>
       <el-menu-item v-else :index="String(index)" @click="$router.push({ name: item.routeName })">
-        <img :src="getImgSrc(imgPath, item.label)" />
+        <img class="prefix" :src="getImgSrc(imgPath, item.label)" />
         <span>{{ item.label }}</span>
+        <img class="suffix" src="./images/active.png" />
       </el-menu-item>
     </template>
   </el-menu>
@@ -32,18 +34,33 @@ import { getImgSrc } from '@/common/utils'
 .navigation {
   --el-menu-text-color: var(--g-text-color);
   --el-menu-active-color: var(--g-text-color);
+  --el-menu-item-font-size: 18px;
+  --el-menu-item-height: 58px;
+  --el-menu-sub-item-height: 58px;
+  --el-menu-hover-bg-color: #183860;
 
   flex: 1;
   height: 0;
   overflow: auto;
   border: none;
 
-  .el-menu-item.is-active {
-    background-color: var(--menu-active-bg);
+  .prefix {
+    margin: 0 6px;
   }
 
-  img {
-    margin: 0 6px;
+  .suffix {
+    display: none;
+  }
+
+  .el-menu-item.is-active {
+    position: relative;
+    background-color: var(--menu-active-bg);
+
+    > .suffix {
+      position: absolute;
+      right: 0;
+      display: initial;
+    }
   }
 }
 </style>

@@ -33,41 +33,19 @@
               :key="`${index}_${item.dataId}_${item.dataContent}`">
               <p>{{ item.dataContent }}</p>
               <div>
-                <img
-                  src="./images/top.png"
-                  @click="
-                    editRadarModel(
-                      { dataId: item.dataId, dataContent: item.dataContent, top: 1 },
-                      true
-                    )
-                  " />
-                <el-popover trigger="click" @before-enter="editValue = item.dataContent">
-                  <template #reference>
-                    <img src="./images/edit.png" />
-                  </template>
-                  <el-input
-                    v-model="editValue"
-                    @keyup.enter="
-                      editRadarModel({
-                        dataId: item.dataId,
-                        dataContent: editValue,
-                        top: item.top
-                      })
-                    "
-                    clearable />
-                </el-popover>
-                <el-popconfirm
-                  :title="`确定删除${getPageName(props.pageType)}：${
-                    item.dataContent
-                  } ？（关联 ${stationNum} 个${props.pageType === 'radar' ? '台站' : '回算'}）`"
-                  @confirm="deleteData({ dataId: item.dataId })"
-                  @show="getNumByData(item.dataId)"
-                  @hide="stationNum = '-'"
-                  width="220">
-                  <template #reference>
-                    <img src="./images/delete.png" />
-                  </template>
-                </el-popconfirm>
+                <el-tooltip effect="light" content="置顶">
+                  <img
+                    src="./images/top.png"
+                    @click="
+                      editData({ dataId: item.dataId, dataContent: item.dataContent, top: 1 }, true)
+                    " />
+                </el-tooltip>
+                <el-tooltip effect="light" content="编辑">
+                  <img src="./images/edit.png" @click="onEditData(item)" />
+                </el-tooltip>
+                <el-tooltip effect="light" content="删除">
+                  <img src="./images/delete.png" @click="onDeleteData(item)" />
+                </el-tooltip>
               </div>
             </li>
           </template>
@@ -90,7 +68,7 @@ import {
 import type { IPickResponse } from '@/common/axios'
 import type { IPageType } from './const'
 import { getPageName, repetitionKey, getTipStateOptions, type ITipState } from './const'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import {
   addDisasterTagApi,
   deleteDisasterTaglApi,
@@ -174,16 +152,35 @@ const addRadarModel = async () => {
 }
 
 // 编辑
-const editValue = ref('')
-const editRadarModel = async (
-  data: Parameters<typeof editRadarModelApi>[0] | Parameters<typeof editDisasterTaglApi>[0],
+const onEditData = (
+  originalData: Parameters<typeof editRadarModelApi>[0] | Parameters<typeof editDisasterTaglApi>[0]
+) => {
+  ElMessageBox.prompt(`请输入新的${getPageName(props.pageType)}`, '编辑', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    inputValue: originalData.dataContent,
+    inputValidator: value => {
+      if (value) {
+        return true
+      } else {
+        return `请输入${getPageName(props.pageType)}`
+      }
+    }
+  })
+    .then(({ value }) => {
+      editData({ ...originalData, dataContent: value })
+    })
+    .catch(() => {})
+}
+const editData = async (
+  originalData: Parameters<typeof editRadarModelApi>[0] | Parameters<typeof editDisasterTaglApi>[0],
   top?: boolean
 ) => {
   loading.value = true
   try {
     const { data: res } = await (props.pageType === 'radar'
       ? editRadarModelApi
-      : editDisasterTaglApi)(data)
+      : editDisasterTaglApi)(originalData)
     if (repetitionKey.test(res)) {
       ElMessage.warning(res)
     } else {
@@ -199,23 +196,43 @@ const editRadarModel = async (
 }
 
 // 删除
-const stationNum = ref<string | number>('-')
+const onDeleteData = async (
+  originalData: Parameters<typeof editRadarModelApi>[0] | Parameters<typeof editDisasterTaglApi>[0]
+) => {
+  const num = await getNumByData(originalData.dataId)
+  ElMessageBox.confirm(
+    `确定删除${getPageName(props.pageType)}：${originalData.dataContent} ？（已关联 ${num} 个${
+      props.pageType === 'radar' ? '台站' : '回算'
+    }）`,
+    '删除',
+    {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    }
+  )
+    .then(() => {
+      deleteData({ dataId: originalData.dataId })
+    })
+    .catch(() => {})
+}
 const getNumByData = async (dataId: string) => {
   try {
     const { data: res } = await (props.pageType === 'radar'
       ? getNumByRadarModelApi
       : getNumByDisasterTaglApi)({ dataId })
-    stationNum.value = res
+    return res
   } catch (error: any) {
     console.error(error)
+    return '-'
   }
 }
 const deleteData = async (
-  data: Parameters<typeof deleteRadarModelApi>[0] | Parameters<typeof deleteDisasterTaglApi>[0]
+  targetId: Parameters<typeof deleteRadarModelApi>[0] | Parameters<typeof deleteDisasterTaglApi>[0]
 ) => {
   loading.value = true
   try {
-    await (props.pageType === 'radar' ? deleteRadarModelApi : deleteDisasterTaglApi)(data)
+    await (props.pageType === 'radar' ? deleteRadarModelApi : deleteDisasterTaglApi)(targetId)
     ElMessage.success(`删除${getPageName(props.pageType)}成功！`)
   } catch (error: any) {
     console.error(error)

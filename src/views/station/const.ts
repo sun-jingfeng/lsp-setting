@@ -1,4 +1,4 @@
-export type IProState = 1 | 0
+export type IProState = 1 | 0 | -1
 
 export type IRadarType =
   | 'S波段单偏振'
@@ -11,6 +11,10 @@ export type IRadarType =
   | 'X波段相控阵'
 
 export const stateOptions: { label: string; value: IProState }[] = [
+  {
+    label: '全部',
+    value: -1
+  },
   {
     label: '实时',
     value: 1

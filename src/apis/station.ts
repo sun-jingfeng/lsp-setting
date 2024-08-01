@@ -83,7 +83,7 @@ export const deleteRadarModelApi = (params: { dataId: string }) => {
     url: '/lsp-tianjin/radarType/delete',
     method: 'get',
     params: {
-      radarId: params.dataId
+      id: params.dataId
     }
   }).then(res => {
     // 数据处理
@@ -116,9 +116,7 @@ export const getRadarAreaListApi = () => {
           proState: item.real_time_flag
         } as any) ?? [])
     )
-    const c_areaList: IAreaList = [
-      { label: '全部 ', value: '全部 ', children: cloneDeep(areaList) }
-    ]
+    const c_areaList: IAreaList = [{ label: '全部', value: '全部', children: cloneDeep(areaList) }]
     formatAreaList(c_areaList)
     function formatAreaList(i_areaList: IAreaList) {
       i_areaList.forEach(item => {
@@ -146,6 +144,7 @@ export const getStationListApi = (params: {
   radarTypeList?: string[]
   nameOrNo?: string
 }) => {
+  params.radarAreaList = params.radarAreaList?.filter(item => item !== '全国')
   return request<{
     total: number
     records: IStation[]
@@ -156,7 +155,7 @@ export const getStationListApi = (params: {
       pageNum: params.pageNum,
       pageSize: params.pageSize,
       province: params.radarAreaList?.join() || undefined,
-      realTimeFlag: params.proState,
+      realTimeFlag: params.proState === -1 ? undefined : params.proState,
       radarTypeID: params.radarModelIdList?.join() || undefined,
       radar_classify: params.radarTypeList?.join() || undefined,
       fuzzy: params.nameOrNo
