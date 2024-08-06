@@ -49,7 +49,7 @@
               </div>
             </li>
           </template>
-          <el-empty v-else description="暂无数据" :image-size="80" />
+          <img class="g-empty" src="@/images/empty.png" />
         </ul>
       </div>
     </el-dialog>

@@ -9,6 +9,10 @@
         </div>
       </div>
       <Navigation />
+      <div class="bottom" @click="toggleDark">
+        <img src="./images/apperance.png" />
+        <span>{{ systemStore.dark ? '浅色' : '深色' }}模式</span>
+      </div>
       <div class="bottom">
         <img src="./images/home.png" />
         <span>回到首页</span>
@@ -30,6 +34,10 @@
 import { CONFIG } from '@/common/const'
 import { RouterView } from 'vue-router'
 import Navigation from './Navigation/Navigation.vue'
+import { useSystemStore } from '@/stores/system'
+import { toggleDark } from '@/common/dark'
+
+const systemStore = useSystemStore()
 
 const showLogo = import.meta.env.MODE !== 'production'
 </script>
@@ -62,6 +70,7 @@ const showLogo = import.meta.env.MODE !== 'production'
       align-items: center;
       justify-content: center;
       padding: 16px 0;
+      font-size: 18px;
       color: #adbce1;
       letter-spacing: 8px;
       cursor: pointer;
