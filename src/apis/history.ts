@@ -143,6 +143,15 @@ export const addHistoryApi = (data: {
   dateTimeRange: [string, string]
   disasterTags: string[]
 }) => {
+  data.radarProducts = data.radarProducts.map(item => {
+    const reg = /^same-(.*)$/
+    if (reg.test(item)) {
+      return item.match(reg)?.[1] ?? ''
+    } else {
+      return item
+    }
+  })
+  data.radarProducts = [...new Set(data.radarProducts)]
   return request({
     url: '/lsp-tianjin/stationHistory/add',
     method: 'post',
