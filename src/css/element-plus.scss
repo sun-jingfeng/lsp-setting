@@ -1,4 +1,6 @@
+/* stylelint-disable no-duplicate-selectors */
 :root {
+  --el-text-color-regular: var(--g-text-color) !important;
   --el-color-primary: #006aff !important;
   --el-color-primary-light-3: #427ef7 !important;
   --el-color-success: #64c253 !important;
@@ -9,45 +11,121 @@
   --el-color-danger-light-3: #d95363 !important;
 }
 
-.el-table {
-  --el-bg-color: var(--g-bg-2) !important;
-  --el-table-text-color: var(--g-text-color) !important;
-  --el-table-header-text-color: var(--g-text-color) !important;
+:root {
+  --g-text-color-bg: #fff;
+  --g-placeholder-color: #656873;
+  --g-border-color: rgb(97 110 137 / 20%);
+  --g-select-tag-bg: #d9e6fd;
+  --g-select-tag-color: #006aff;
+  --g-table-header-bg-color: #eceff7;
+  --g-table-border-color: #e2e5f0;
+  --g-table-row-hover-bg-color: #f0f6fe;
+  --g-dialog-bg-color: #fff;
+  --g-dialog-title-bg: #eceff8;
 }
 
-.el-select {
-  --el-text-color-regular: var(--g-text-color) !important;
-  --el-fill-color-blank: var(--g-text-color-bg) !important;
-  --el-text-color-placeholder: var(--placeholder-color) !important;
-  --el-border-color: var(--border-color) !important;
+:root.dark {
+  --g-text-color-bg: #1d3c5f;
+  --g-placeholder-color: #eceff8;
+  --g-border-color: #254e7d;
+  --g-select-tag-bg: #335c8a;
+  --g-select-tag-color: #eceff8;
+  --g-table-header-bg-color: #172b4c;
+  --g-table-border-color: #223859;
+  --g-table-row-hover-bg-color: #1b2b47;
+  --g-dialog-bg-color: #0b2341;
+  --g-dialog-title-bg: #102c4e;
 }
 
-.el-input {
-  --el-input-bg-color: var(--g-text-color-bg) !important;
-  --el-fill-color-light: var(--g-text-color-bg) !important;
-  --el-text-color-placeholder: var(--placeholder-color) !important;
-  --el-border-color: var(--border-color) !important;
+:root {
+  // table
+  .el-table {
+    --el-bg-color: var(--g-bg-2) !important;
+    --el-table-text-color: var(--g-text-color) !important;
+    --el-table-header-text-color: var(--g-text-color) !important;
+    --el-table-header-bg-color: var(--g-table-header-bg-color) !important;
+    --el-table-border-color: var(--g-table-border-color) !important;
+    --el-table-row-hover-bg-color: var(--g-table-row-hover-bg-color) !important;
+  }
+
+  // pagination
+  .el-pagination {
+    --el-pagination-button-color: var(--g-text-color) !important;
+  }
+
+  // select
+  .el-select {
+    --el-fill-color-blank: var(--g-text-color-bg) !important;
+    --el-text-color-placeholder: var(--g-text-color-3) !important;
+    --el-border-color: var(--g-border-color) !important;
+    --el-border-color-hover: var(--g-border-color) !important;
+  }
+
+  .el-select__selection > .el-select__selected-item > .el-tag.el-tag--info {
+    --el-tag-bg-color: var(--g-select-tag-bg) !important;
+    --el-tag-text-color: var(--g-select-tag-color) !important;
+  }
+
+  // input
+  .el-input {
+    --el-input-bg-color: var(--g-text-color-bg) !important;
+    --el-fill-color-light: var(--g-text-color-bg) !important;
+    --el-text-color-placeholder: var(--g-text-color-3) !important;
+    --el-border-color: var(--g-border-color) !important;
+    --el-border-color-hover: var(--g-border-color) !important;
+  }
+
+  // dialog
+  .el-dialog {
+    --el-dialog-bg-color: var(--g-dialog-bg-color) !important;
+    --el-dialog-border-radius: 10px !important;
+
+    padding-top: 64px !important;
+
+    > .el-dialog__header {
+      --el-text-color-primary: var(--g-text-color-2) !important;
+
+      position: absolute !important;
+      top: 0 !important;
+      right: 0 !important;
+      left: 0 !important;
+      height: 48px !important;
+      padding: 0 16px !important;
+      line-height: 48px !important;
+      background-color: var(--g-dialog-title-bg) !important;
+      border-radius: 10px 10px 0 0;
+
+      > .el-dialog__headerbtn > .el-dialog__close {
+        --el-color-info: var(--g-text-color) !important;
+      }
+    }
+
+    > .el-dialog__footer {
+      --el-dialog-padding-primary: 0 !important;
+
+      padding-bottom: 16px !important;
+    }
+  }
+
+  // form
+  .el-form {
+    .el-form-item__label {
+      --el-text-color-regular: var(--g-text-color-3) !important;
+    }
+  }
+
+  // cascader
+  .el-cascader {
+    --el-cascader-tag-background: var(--g-select-tag-bg) !important;
+    --el-color-info: var(--g-select-tag-color) !important;
+  }
 }
 
-html.dark {
+:root.dark {
+  // v-loading
   --el-mask-color: rgb(16 44 78 / 80%) !important;
 
-  .el-table {
-    --el-table-header-bg-color: #102c4e !important;
-    --el-table-border-color: rgb(29 60 95 / 80%) !important;
-    --el-table-row-hover-bg-color: rgb(255 255 255 / 6%) !important;
-  }
-
-  .el-select {
-    --el-border-color-hover: #6f8cd0 !important;
-    --el-color-info-light-9: #102c4e !important;
-    --el-color-info: var(--g-text-color) !important;
-  }
-
-  .el-input {
-    --el-border-color-hover: #6f8cd0 !important;
-  }
-
+  // select
   .el-select__popper.el-popper {
     --el-bg-color-overlay: #1d3c5f !important;
     --el-border-color-light: #6f8cd0 !important;
@@ -58,20 +136,12 @@ html.dark {
     }
   }
 
-  .el-dialog {
-    --el-dialog-bg-color: #102c4e !important;
-  }
-
-
+  // checkbox
   .el-checkbox {
     --el-checkbox-input-border: 1px solid #e5f0ff !important;
   }
 
-  .el-cascader {
-    --el-cascader-tag-background: #102c4e !important;
-    --el-color-info: var(--g-text-color) !important;
-  }
-
+  // cascader
   .el-cascader__dropdown {
     --el-bg-color-overlay: #1d3c5f !important;
   }
@@ -80,32 +150,35 @@ html.dark {
     --el-cascader-node-background-hover: rgb(255 255 255 / 10%) !important;
   }
 
+  // date
+  .el-date-editor {
+    --el-input-border-color: #102c4e !important;
+    --el-input-bg-color: #0b2341 !important;
+    --el-text-color-placeholder: var(--g-placeholder-color) !important;
+    --el-input-hover-border-color: #6f8cd0 !important;
+  }
+
+  .el-date-range-picker {
+    --el-datepicker-inrange-hover-bg-color: rgb(255 255 255 / 10%) !important;
+    --el-datepicker-inrange-bg-color: rgb(255 255 255 / 10%) !important;
+  }
+
   .el-picker-panel {
     --el-bg-color-overlay: #1d3c5f !important;
     --el-disabled-bg-color: rgb(255 255 255 / 10%) !important;
   }
 
-  .el-date-editor {
-    --el-input-border-color: #102c4e !important;
-    --el-input-bg-color: #0b2341 !important;
-    --el-text-color-placeholder: var(--placeholder-color) !important;
-    --el-input-hover-border-color: #6f8cd0 !important;
-  }
-
+  // tree
   .el-tree {
     --el-tree-node-hover-bg-color: rgb(255 255 255 / 10%) !important;
   }
 
+  // message-box
   .el-message-box {
     --el-bg-color: #0b2341 !important;
 
     .el-button:nth-child(1) {
       background-color: #24446a !important;
     }
-  }
-
-  .el-date-range-picker {
-    --el-datepicker-inrange-hover-bg-color: rgb(255 255 255 / 10%) !important;
-    --el-datepicker-inrange-bg-color: rgb(255 255 255 / 10%) !important;
   }
 }

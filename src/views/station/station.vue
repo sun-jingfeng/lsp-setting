@@ -296,6 +296,8 @@ const deleteStation = (stationId: string, stationName: string) => {
     display: flex;
     align-items: center;
     padding: 8px 0;
+    font-weight: 700;
+    color: var(--g-text-color-2);
 
     > .filter {
       display: flex;

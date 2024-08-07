@@ -1,6 +1,9 @@
 <template>
   <ul class="step">
-    <li v-for="(noUse, index) in new Array(props.stepsNum)" :key="index">
+    <li
+      v-for="(noUse, index) in new Array(props.stepsNum)"
+      :key="index"
+      :class="{ active: modelValue > index }">
       <div class="left">
         <div class="ball">
           <el-icon v-if="modelValue > index + 1"><Select /></el-icon>
@@ -15,7 +18,7 @@
           ]" />
       </div>
       <div class="right">
-        <div class="title" :class="{ active: modelValue > index }">
+        <div class="title">
           <p>{{ props.titlesList[index]?.title }}</p>
           <p v-if="props.titlesList[index]?.description">
             {{ props.titlesList[index]?.description }}
@@ -77,8 +80,8 @@ const emit = defineEmits<{
         width: 40px;
         height: 40px;
         font-size: 20px;
-        color: #e5f0ff;
-        background-color: #006aff;
+        color: var(--title-color);
+        border: 2px solid var(--title-color);
         border-radius: 50%;
       }
 
@@ -102,17 +105,13 @@ const emit = defineEmits<{
       margin-left: 8px;
 
       > .title {
-        color: #bbbdbf;
+        color: var(--title-color);
 
         > p:nth-child(1) {
           margin: 8px 0;
           font-size: 18px;
           font-weight: 500;
         }
-      }
-
-      > .title.active {
-        color: inherit;
       }
 
       > .control {
@@ -125,8 +124,32 @@ const emit = defineEmits<{
     }
   }
 
+  > li.active {
+    > .left {
+      > .ball {
+        color: #fff;
+        background-color: #006aff;
+        border-color: #006aff;
+      }
+    }
+
+    > .right {
+      > .title {
+        color: var(--g-text-color-2);
+      }
+    }
+  }
+
   > li:not(:last-child) {
     min-height: 120px;
   }
+}
+
+:root .step {
+  --title-color: var(--g-text-color-3);
+}
+
+:root.dark .step {
+  --title-color: #bbbdbf;
 }
 </style>

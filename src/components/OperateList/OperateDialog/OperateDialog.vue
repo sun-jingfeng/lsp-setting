@@ -35,21 +35,25 @@
               <div>
                 <el-tooltip effect="light" content="置顶">
                   <img
-                    src="./images/top.png"
+                    :src="getImgSrc(imgPath, systemStore.dark ? 'top-dark' : 'top')"
                     @click="
                       editData({ dataId: item.dataId, dataContent: item.dataContent, top: 1 }, true)
                     " />
                 </el-tooltip>
                 <el-tooltip effect="light" content="编辑">
-                  <img src="./images/edit.png" @click="onEditData(item)" />
+                  <img
+                    :src="getImgSrc(imgPath, systemStore.dark ? 'edit-dark' : 'edit')"
+                    @click="onEditData(item)" />
                 </el-tooltip>
                 <el-tooltip effect="light" content="删除">
-                  <img src="./images/delete.png" @click="onDeleteData(item)" />
+                  <img
+                    :src="getImgSrc(imgPath, systemStore.dark ? 'delete-dark' : 'delete')"
+                    @click="onDeleteData(item)" />
                 </el-tooltip>
               </div>
             </li>
           </template>
-          <img class="g-empty" src="@/images/empty.png" />
+          <Empty v-else />
         </ul>
       </div>
     </el-dialog>
@@ -67,7 +71,7 @@ import {
 } from '@/apis/station'
 import type { IPickResponse } from '@/common/axios'
 import type { IPageType } from './const'
-import { getPageName, repetitionKey, getTipStateOptions, type ITipState } from './const'
+import { getPageName, repetitionKey, getTipStateOptions, type ITipState, imgPath } from './const'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import {
   addDisasterTagApi,
@@ -76,6 +80,9 @@ import {
   getDisasterTaglListApi,
   getNumByDisasterTaglApi
 } from '@/apis/history'
+import { getImgSrc } from '@/common/utils'
+import { useSystemStore } from '@/stores/system'
+import Empty from '@/components/Empty/Empty.vue'
 
 type IProps = {
   pageType?: IPageType
@@ -87,6 +94,8 @@ const props = withDefaults(defineProps<IProps>(), {
 const emit = defineEmits<{
   (e: 'closeRadar'): void
 }>()
+
+const systemStore = useSystemStore()
 
 // 输入框
 const inputValue = ref('')
@@ -297,9 +306,17 @@ const deleteData = async (
       }
 
       > li:hover {
-        background-color: var(--g-text-color-bg);
+        background-color: var(--hover-bg);
       }
     }
   }
+}
+
+:root .operate-dialog {
+  --hover-bg: #fff;
+}
+
+:root.dark .operate-dialog {
+  --hover-bg: #1d3c5f;
 }
 </style>

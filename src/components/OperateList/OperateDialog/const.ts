@@ -32,3 +32,5 @@ export const getTipStateOptions = (
 ]
 
 export const repetitionKey = /禁止重复配置/
+
+export const imgPath = 'components/OperateList/OperateDialog/images'

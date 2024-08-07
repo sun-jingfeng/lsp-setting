@@ -2,19 +2,21 @@
   <div class="layout">
     <div class="header">
       <div class="title">
-        <img src="./images/logo.png" />
+        <img v-if="showLogo" src="./images/logo.png" />
         <div>
-          <img v-if="showLogo" src="./images/title.png" />
+          <img
+            v-if="showLogo"
+            :src="getImgSrc(imgPath, systemStore.dark ? 'title-dark' : 'title')" />
           <p>{{ CONFIG.appName }}</p>
         </div>
       </div>
       <Navigation />
       <div class="bottom" @click="toggleDark">
-        <img src="./images/apperance.png" />
+        <img :src="getImgSrc(imgPath, systemStore.dark ? 'apperance-dark' : 'apperance')" />
         <span>{{ systemStore.dark ? '浅色' : '深色' }}模式</span>
       </div>
       <div class="bottom">
-        <img src="./images/home.png" />
+        <img :src="getImgSrc(imgPath, systemStore.dark ? 'home-dark' : 'home')" />
         <span>回到首页</span>
       </div>
     </div>
@@ -36,10 +38,10 @@ import { RouterView } from 'vue-router'
 import Navigation from './Navigation/Navigation.vue'
 import { useSystemStore } from '@/stores/system'
 import { toggleDark } from '@/common/dark'
+import { getImgSrc } from '@/common/utils'
+import { imgPath, showLogo } from './const'
 
 const systemStore = useSystemStore()
-
-const showLogo = import.meta.env.MODE !== 'production'
 </script>
 
 <style scoped lang="scss">
@@ -59,6 +61,8 @@ const showLogo = import.meta.env.MODE !== 'production'
       height: 90px;
       padding: 0 12px;
       font-size: 24px;
+      font-weight: 600;
+      color: var(--title-color);
 
       > img {
         margin-right: 10px;
@@ -71,7 +75,8 @@ const showLogo = import.meta.env.MODE !== 'production'
       justify-content: center;
       padding: 16px 0;
       font-size: 18px;
-      color: #adbce1;
+      font-weight: 700;
+      color: var(--title-color);
       letter-spacing: 8px;
       cursor: pointer;
 
@@ -84,8 +89,14 @@ const showLogo = import.meta.env.MODE !== 'production'
   > .main {
     flex: 1;
     width: 0;
-    padding: 16px;
-    overflow: auto;
   }
+}
+
+:root .layout {
+  --title-color: #006aff;
+}
+
+:root.dark .layout {
+  --title-color: #eceff8;
 }
 </style>

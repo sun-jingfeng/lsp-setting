@@ -1,6 +1,6 @@
 <template>
-  <div class="history">
-    <p class="g-decorate">历史回算</p>
+  <div class="history g-page">
+    <p class="g-decorate">{{ getLabel() }}</p>
     <div class="content">
       <Step
         v-model="activeStep"
@@ -30,6 +30,7 @@ import Content2 from './Content2/Content2.vue'
 import Content3 from './Content3/Content3.vue'
 import Step from './Step/Step.vue'
 import { addHistoryApi } from '@/apis/history'
+import { getLabel } from '@/components/Layout/Navigation/const'
 
 // 进度条
 const activeStep = ref(1)
@@ -92,17 +93,15 @@ const submit = () => {
 .history {
   display: flex;
   flex-direction: column;
-  width: max-content;
-  height: 100%;
-  margin-left: 18%;
 
   > .g-decorate {
-    margin: 8px 0 20px;
+    margin: 8px 0 20px 14%;
   }
 
   > .content {
     flex: 1;
     height: 0;
+    padding-left: 14%;
     overflow: auto;
   }
 }

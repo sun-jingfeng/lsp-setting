@@ -170,19 +170,23 @@ const formRules: FormRules<IStation> = {
     { required: true, message: '请输入', trigger: 'change' },
     {
       validator: (rule, value, callback) => {
-        sameVerifyApi({ stationNo: value }).then(
-          ({ data: res }) => {
-            if (res && props.operateType === 'add') {
-              callback(new Error('已存在相同站号！'))
-            } else {
+        if (value) {
+          sameVerifyApi({ stationNo: value }).then(
+            ({ data: res }) => {
+              if (res && props.operateType === 'add') {
+                callback(new Error('已存在相同站号！'))
+              } else {
+                callback()
+              }
+            },
+            error => {
+              console.error(error)
               callback()
             }
-          },
-          error => {
-            console.error(error)
-            callback()
-          }
-        )
+          )
+        } else {
+          callback()
+        }
       },
       trigger: 'blur'
     }
@@ -191,19 +195,23 @@ const formRules: FormRules<IStation> = {
     { required: true, message: '请输入', trigger: 'change' },
     {
       validator: (rule, value, callback) => {
-        sameVerifyApi({ stationName: value }).then(
-          ({ data: res }) => {
-            if (res && props.operateType === 'add') {
-              callback(new Error('已存在相同站名！'))
-            } else {
+        if (value) {
+          sameVerifyApi({ stationName: value }).then(
+            ({ data: res }) => {
+              if (res && props.operateType === 'add') {
+                callback(new Error('已存在相同站名！'))
+              } else {
+                callback()
+              }
+            },
+            error => {
+              console.error(error)
               callback()
             }
-          },
-          error => {
-            console.error(error)
-            callback()
-          }
-        )
+          )
+        } else {
+          callback()
+        }
       },
       trigger: 'blur'
     }
@@ -282,7 +290,7 @@ const onSubmit = () => {
 <style scoped lang="scss">
 .operate-dialog {
   :deep(.el-dialog) {
-    width: 400px;
+    width: 410px;
   }
 
   .el-form {

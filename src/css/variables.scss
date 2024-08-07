@@ -1,23 +1,20 @@
 :root {
-  // 通用
   --g-font-family: '苹方-简', 'Microsoft YaHei', '微软雅黑', helvetica, arial, sans-serif;
-
-  // 切换
-  --g-text-color: #484949;
-  --g-text-color-bg: #f2f2f2;
-  --g-bg: #f5f6fa;
-  --g-bg-2: #fff;
-  --placeholder-color: #656873;
-  --border-color: rgb(97 110 137 / 20%);
-  --menu-active-bg: #e7f0fe;
 }
 
-html.dark {
+/* stylelint-disable-next-line no-duplicate-selectors */
+:root {
+  --g-text-color: #142c65;
+  --g-text-color-2: #191a1e;
+  --g-text-color-3: #656873;
+  --g-bg: #f6f8fa;
+  --g-bg-2: #fff;
+}
+
+:root.dark {
   --g-text-color: #eceff8;
-  --g-text-color-bg: #1d3c5f;
+  --g-text-color-2: #eceff8;
+  --g-text-color-3: #eceff8;
   --g-bg: #051932;
   --g-bg-2: #0b2341;
-  --placeholder-color: #eceff8;
-  --border-color: #254e7d;
-  --menu-active-bg: #006aff;
 }

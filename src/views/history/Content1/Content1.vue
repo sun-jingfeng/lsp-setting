@@ -180,12 +180,16 @@ const handleCheckedCitiesChange = (value: CheckboxValueType[]) => {
 
 // 穿梭
 const transfer = () => {
-  const result = new Set([...rightCheckedStations.value, ...leftCheckedStations.value])
-  if (result.size > checkLimit) {
-    ElMessage.warning(`最多选择 ${checkLimit} 个雷达台站！`)
+  if (leftCheckedStations.value.length) {
+    const result = new Set([...rightCheckedStations.value, ...leftCheckedStations.value])
+    if (result.size > checkLimit) {
+      ElMessage.warning(`最多选择 ${checkLimit} 个雷达台站！`)
+    } else {
+      rightCheckedStations.value = result
+      resetCheck()
+    }
   } else {
-    rightCheckedStations.value = result
-    resetCheck()
+    ElMessage.warning('请至少选中一个台站！')
   }
 }
 
@@ -250,8 +254,8 @@ defineExpose({
     > .right {
       width: 430px;
       height: 530px;
-      background: #0b2341;
-      border: 1px solid #102c4e;
+      background: var(--bg-color);
+      border: 1px solid var(--border-color);
       border-radius: 4px;
 
       > .top {
@@ -260,7 +264,7 @@ defineExpose({
         justify-content: space-between;
         height: 40px;
         padding: 0 12px;
-        background: #102c4e;
+        background: var(--top-bg);
       }
 
       > .el-input {
@@ -288,7 +292,8 @@ defineExpose({
           }
 
           > li.active {
-            background-color: #006aff;
+            color: var(--active-color);
+            background-color: var(--active-bg);
           }
         }
 
@@ -306,7 +311,7 @@ defineExpose({
                 align-items: center;
                 justify-content: center;
                 height: 36px;
-                background-color: #0a274a;
+                background-color: var(--table-bg);
               }
 
               > div + div {
@@ -358,5 +363,23 @@ defineExpose({
       min-height: 36px;
     }
   }
+}
+
+:root .content1 {
+  --bg-color: #fff;
+  --border-color: rgb(222 226 239 / 80%);
+  --top-bg: #eceff8;
+  --table-bg: rgb(236 239 248 / 30%);
+  --active-bg: #eff6ff;
+  --active-color: #006aff;
+}
+
+:root.dark .content1 {
+  --bg-color: #0b2341;
+  --border-color: #102c4e;
+  --top-bg: #102c4e;
+  --table-bg: #0a274a;
+  --active-bg: #006aff;
+  --active-color: var(--g-text-color);
 }
 </style>

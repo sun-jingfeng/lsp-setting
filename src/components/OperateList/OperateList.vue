@@ -1,13 +1,19 @@
 <template>
   <div class="operate-list">
-    <img class="tag" src="./images/tag.png" @click="showRadar = true" />
+    <img
+      class="tag"
+      :src="getImgSrc(imgPath, systemStore.dark ? 'tag-dark' : 'tag')"
+      @click="showRadar = true" />
     <OperateDialog v-if="showRadar" @closeRadar="closeRadar" :pageType="props.pageType" />
   </div>
 </template>
 
 <script setup lang="ts">
+import { getImgSrc } from '@/common/utils'
 import type { IPageType } from './OperateDialog/const'
 import OperateDialog from './OperateDialog/OperateDialog.vue'
+import { imgPath } from './const'
+import { useSystemStore } from '@/stores/system'
 
 type IProps = {
   pageType?: IPageType
@@ -16,6 +22,8 @@ type IProps = {
 const props = withDefaults(defineProps<IProps>(), {
   pageType: 'radar'
 })
+
+const systemStore = useSystemStore()
 
 const showRadar = ref(false)
 const closeRadar = () => {
@@ -28,7 +36,6 @@ const closeRadar = () => {
 <style scoped lang="scss">
 .operate-list {
   > .tag {
-    padding: 2px;
     pointer-events: initial;
     cursor: pointer;
   }
