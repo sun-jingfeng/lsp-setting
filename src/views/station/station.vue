@@ -77,7 +77,7 @@
       <el-table-column prop="province" label="省份" />
       <el-table-column prop="longitude" label="经度(°)" />
       <el-table-column prop="latitude" label="纬度(°)" />
-      <el-table-column prop="altitude" label="高度(km)" />
+      <el-table-column prop="altitude" label="高度(m)" />
       <el-table-column label="雷达型号">
         <template #default="{ row }: { row: IStation }">
           <span>{{

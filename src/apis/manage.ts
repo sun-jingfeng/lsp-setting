@@ -4,7 +4,7 @@ import type { IOperateType, IUser } from '@/views/manage/Operate/const'
 
 // export const mockApi = () => {
 //   return request<string>({
-//     url: '/lsp-tianjin/login',
+//     url: '/login',
 //     method: 'get',
 //     data: {
 //       username: 'admin',
@@ -17,16 +17,21 @@ import type { IOperateType, IUser } from '@/views/manage/Operate/const'
 // }
 
 // 获取用户列表
-export const getUsersListApi = (params: { pageNum: number; pageSize: number }) => {
+export const getUsersListApi = (params: {
+  pageNum: number
+  pageSize: number
+  username: string
+}) => {
   return request<{
     total: number
     records: IUser[]
   }>({
-    url: '/lsp-tianjin/user/query',
+    url: '/user/query',
     method: 'get',
     params: {
       currentPage: params.pageNum,
-      pageSize: params.pageSize
+      pageSize: params.pageSize,
+      userName: params.username
     }
   }).then(res => {
     res.data.records = res.data.records?.map(
@@ -47,7 +52,7 @@ export const getUsersListApi = (params: { pageNum: number; pageSize: number }) =
 // 验证用户名称是否重复
 export const sameVerifyApi = (params: { username: string }) => {
   return request({
-    url: '/lsp-tianjin/user/checkUserExists',
+    url: '/user/checkUserExists',
     method: 'get',
     params: {
       userName: params.username
@@ -61,7 +66,7 @@ export const sameVerifyApi = (params: { username: string }) => {
 // 新增、编辑用户
 export const addOrEditUserApi = (operateType: IOperateType, data: IUser) => {
   return request<string>({
-    url: operateType === 'add' ? '/lsp-tianjin/user/add' : '/lsp-tianjin/user/update',
+    url: operateType === 'add' ? '/user/add' : '/user/update',
     method: 'post',
     data: {
       userId: data.userId,
@@ -78,7 +83,7 @@ export const addOrEditUserApi = (operateType: IOperateType, data: IUser) => {
 // 删除用户
 export const deleteUserApi = (params: { userId: string }) => {
   return request<string>({
-    url: '/lsp-tianjin/user/delete',
+    url: '/user/delete',
     method: 'get',
     params: {
       userId: params.userId

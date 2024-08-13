@@ -2,7 +2,16 @@
   <div class="manage g-page" v-loading="loading">
     <div class="top">
       <p class="g-decorate">{{ getLabel() }}</p>
-      <el-button type="primary" :icon="CirclePlus" @click="addUser">新增用户</el-button>
+      <ul class="filter">
+        <li class="left">
+          <span>用户名：</span>
+          <el-input v-model="filterData.username" clearable placeholder="请输入" />
+        </li>
+        <li class="right">
+          <el-button type="primary" @click="getUsersList">查询</el-button>
+          <el-button type="primary" :icon="CirclePlus" @click="addUser">新增用户</el-button>
+        </li>
+      </ul>
     </div>
     <el-table :data="usersList" border>
       <el-table-column label="序号" width="60" align="center">
@@ -58,6 +67,11 @@ import { dayjs, ElMessage, ElMessageBox } from 'element-plus'
 import Operate from './Operate/Operate.vue'
 import type { IOperateType, IUser } from './Operate/const'
 
+// 筛选区
+const filterData = ref({
+  username: ''
+})
+
 // 列表
 const total = ref(0)
 const pageNum = ref(1)
@@ -73,7 +87,8 @@ async function getUsersList() {
   try {
     const { data: res } = await getUsersListApi({
       pageNum: pageNum.value,
-      pageSize: pageSize.value
+      pageSize: pageSize.value,
+      username: filterData.value.username
     })
     total.value = res.total
     usersList.value = res.records
@@ -137,10 +152,38 @@ const deleteUser = (userId: string, username: string) => {
   > .top {
     display: flex;
     align-items: center;
-    justify-content: space-between;
     padding: 8px 0;
     font-weight: 700;
     color: var(--g-text-color-2);
+
+    > .filter {
+      display: flex;
+      flex: 1;
+      align-items: center;
+      justify-content: space-between;
+      width: 0;
+      margin-left: 12px;
+
+      > .left {
+        display: flex;
+        flex-wrap: wrap;
+        margin-bottom: -8px;
+
+        > span {
+          margin: 6px 10px 8px 24px;
+        }
+
+        > .el-input {
+          width: 200px;
+          height: 32px;
+          margin-bottom: 8px;
+        }
+      }
+
+      > .right {
+        flex-shrink: 0;
+      }
+    }
   }
 
   > .el-table {

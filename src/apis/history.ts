@@ -8,7 +8,7 @@ import { cloneDeep } from 'lodash'
 
 // export const mockApi = (params: { id: string }) => {
 //   return request({
-//     url: '/lsp-tianjin/radarType/delete',
+//     url: '/radarType/delete',
 //     method: 'get',
 //     params
 //   }).then(res => {
@@ -20,7 +20,7 @@ import { cloneDeep } from 'lodash'
 // 获取省份列表
 export const getProvinceListApi = () => {
   return request<IAreaList>({
-    url: '/lsp-tianjin/stationInfo/selectPage',
+    url: '/stationInfo/selectPage',
     method: 'post',
     params: {
       pageNum: 1,
@@ -66,7 +66,7 @@ export const getProvinceListApi = () => {
 // 获取灾害标签列表
 export const getDisasterTaglListApi = () => {
   return request<{ dataId: string; dataContent: string; top: 0 | 1 }[]>({
-    url: '/lsp-tianjin/disasterTag/select',
+    url: '/disasterTag/select',
     method: 'post'
   }).then(res => {
     res.data = res.data.map((item: any) => ({
@@ -81,7 +81,7 @@ export const getDisasterTaglListApi = () => {
 // 新增灾害标签
 export const addDisasterTagApi = (params: { dataContent: string }) => {
   return request<string>({
-    url: '/lsp-tianjin/disasterTag/add',
+    url: '/disasterTag/add',
     method: 'post',
     params: {
       disaster_tag: params.dataContent
@@ -95,7 +95,7 @@ export const addDisasterTagApi = (params: { dataContent: string }) => {
 // 编辑灾害标签
 export const editDisasterTaglApi = (data: { dataId: string; dataContent: string; top: 0 | 1 }) => {
   return request<string>({
-    url: '/lsp-tianjin/disasterTag/update',
+    url: '/disasterTag/update',
     method: 'post',
     data: {
       id: data.dataId,
@@ -111,7 +111,7 @@ export const editDisasterTaglApi = (data: { dataId: string; dataContent: string;
 // 获取灾害标签的回算数量
 export const getNumByDisasterTaglApi = (params: { dataId: string }) => {
   return request<number>({
-    url: '/lsp-tianjin/stationHistory/selectCount',
+    url: '/stationHistory/selectCount',
     method: 'post',
     params: {
       disaster_tag_id: params.dataId
@@ -125,7 +125,7 @@ export const getNumByDisasterTaglApi = (params: { dataId: string }) => {
 // 删除灾害标签
 export const deleteDisasterTaglApi = (params: { dataId: string }) => {
   return request({
-    url: '/lsp-tianjin/disasterTag/delete',
+    url: '/disasterTag/delete',
     method: 'get',
     params: {
       id: params.dataId
@@ -153,7 +153,7 @@ export const addHistoryApi = (data: {
   })
   data.radarProducts = [...new Set(data.radarProducts)]
   return request({
-    url: '/lsp-tianjin/stationHistory/add',
+    url: '/stationHistory/add',
     method: 'post',
     data: {
       stationNos: [...data.stations].join(),

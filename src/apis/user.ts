@@ -3,7 +3,7 @@ import { request, requestPackage } from '@/common/axios'
 
 export const loginApi = (data: { username: string; password: string }) => {
   return request<string>({
-    url: '/lsp-tianjin/login',
+    url: '/login',
     method: 'get',
     data
   }).then(res => {

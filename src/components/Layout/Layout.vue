@@ -15,7 +15,7 @@
         <img :src="getImgSrc(imgPath, systemStore.dark ? 'apperance-dark' : 'apperance')" />
         <span>{{ systemStore.dark ? '浅色' : '深色' }}模式</span>
       </div>
-      <div class="bottom">
+      <div class="bottom" @click="openHome">
         <img :src="getImgSrc(imgPath, systemStore.dark ? 'home-dark' : 'home')" />
         <span>回到首页</span>
       </div>
@@ -42,6 +42,11 @@ import { getImgSrc } from '@/common/utils'
 import { imgPath, showLogo } from './const'
 
 const systemStore = useSystemStore()
+
+// 跳转首页
+const openHome = () => {
+  window.open(CONFIG.homeUrl)
+}
 </script>
 
 <style scoped lang="scss">

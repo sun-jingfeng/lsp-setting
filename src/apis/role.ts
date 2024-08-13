@@ -4,7 +4,7 @@ import type { IRole } from '@/views/role/Operate/const'
 
 // export const mockApi = () => {
 //   return request<string>({
-//     url: '/lsp-tianjin/login',
+//     url: '/login',
 //     method: 'get',
 //     data: {
 //       username: 'admin',
@@ -22,7 +22,7 @@ export const getRolesListApi = (params: { pageNum: number; pageSize: number }) =
     total: number
     records: IRole[]
   }>({
-    url: '/lsp-tianjin/role/query',
+    url: '/role/query',
     method: 'get',
     params: {
       currentPage: params.pageNum,
@@ -57,7 +57,7 @@ export const getRolesListApi = (params: { pageNum: number; pageSize: number }) =
 // 验证角色名称是否重复
 export const sameVerifyApi = (params: { roleName: string }) => {
   return request({
-    url: '/lsp-tianjin/role/checkRoleExists',
+    url: '/role/checkRoleExists',
     method: 'get',
     params
   }).then(res => {
@@ -69,7 +69,7 @@ export const sameVerifyApi = (params: { roleName: string }) => {
 // 新增角色
 export const addRoleApi = (data: IRole) => {
   return request<string>({
-    url: '/lsp-tianjin/role/add',
+    url: '/role/add',
     method: 'post',
     data
   }).then(res => {
@@ -86,7 +86,7 @@ export const editRoleApi = (data: { roleId: string; authority: string[] }) => {
     data.authority = '' as any
   }
   return request({
-    url: '/lsp-tianjin/role/updatePermissions',
+    url: '/role/updatePermissions',
     method: 'post',
     data: {
       roleId: data.roleId,
@@ -101,7 +101,7 @@ export const editRoleApi = (data: { roleId: string; authority: string[] }) => {
 // 删除角色
 export const deleteRoleApi = (params: { roleId: string }) => {
   return request<string>({
-    url: '/lsp-tianjin/role/delete',
+    url: '/role/delete',
     method: 'get',
     params: {
       roleId: params.roleId

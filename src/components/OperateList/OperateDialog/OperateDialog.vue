@@ -13,7 +13,7 @@
           @input="inputChange"
           :validate-event="false">
           <template #suffix>
-            <el-icon @click="addRadarModel"><Select /></el-icon>
+            <el-icon v-if="inputValue" @click="addRadarModel"><Select /></el-icon>
           </template>
         </el-input>
         <p

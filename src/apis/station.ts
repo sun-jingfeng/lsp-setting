@@ -7,7 +7,7 @@ import { cloneDeep } from 'lodash'
 
 // export const mockApi = () => {
 //   return request<string>({
-//     url: '/lsp-tianjin/login',
+//     url: '/login',
 //     method: 'get',
 //     data: {
 //       username: 'admin',
@@ -22,7 +22,7 @@ import { cloneDeep } from 'lodash'
 // 获取雷达型号列表
 export const getRadarModelListApi = () => {
   return request<{ dataId: string; dataContent: string; top: 0 | 1 }[]>({
-    url: '/lsp-tianjin/radarType/select',
+    url: '/radarType/select',
     method: 'post'
   }).then(res => {
     res.data = res.data.map((item: any) => ({
@@ -37,7 +37,7 @@ export const getRadarModelListApi = () => {
 // 新增雷达型号
 export const addRadarModelApi = (params: { dataContent: string }) => {
   return request<string>({
-    url: '/lsp-tianjin/radarType/add',
+    url: '/radarType/add',
     method: 'post',
     params: {
       radarType: params.dataContent
@@ -51,7 +51,7 @@ export const addRadarModelApi = (params: { dataContent: string }) => {
 // 编辑雷达型号
 export const editRadarModelApi = (data: { dataId: string; dataContent: string; top: 0 | 1 }) => {
   return request<string>({
-    url: '/lsp-tianjin/radarType/update',
+    url: '/radarType/update',
     method: 'post',
     data: {
       id: data.dataId,
@@ -67,7 +67,7 @@ export const editRadarModelApi = (data: { dataId: string; dataContent: string; t
 // 获取雷达型号的台站数量
 export const getNumByRadarModelApi = (params: { dataId: string }) => {
   return request<number>({
-    url: '/lsp-tianjin/stationInfo/selectPage',
+    url: '/stationInfo/selectPage',
     method: 'post',
     params: {
       pageNum: 1,
@@ -83,7 +83,7 @@ export const getNumByRadarModelApi = (params: { dataId: string }) => {
 // 删除雷达型号
 export const deleteRadarModelApi = (params: { dataId: string }) => {
   return request({
-    url: '/lsp-tianjin/radarType/delete',
+    url: '/radarType/delete',
     method: 'get',
     params: {
       id: params.dataId
@@ -97,7 +97,7 @@ export const deleteRadarModelApi = (params: { dataId: string }) => {
 // 获取雷达区域选项
 export const getRadarAreaListApi = () => {
   return request<IAreaList>({
-    url: '/lsp-tianjin/stationInfo/selectPage',
+    url: '/stationInfo/selectPage',
     method: 'post',
     params: {
       pageNum: 1,
@@ -152,7 +152,7 @@ export const getStationListApi = (params: {
     total: number
     records: IStation[]
   }>({
-    url: '/lsp-tianjin/stationInfo/selectPage',
+    url: '/stationInfo/selectPage',
     method: 'post',
     params: {
       pageNum: params.pageNum,
@@ -187,7 +187,7 @@ export const getStationListApi = (params: {
 // 验证站号、站名是否重复
 export const sameVerifyApi = (params: { stationNo?: string; stationName?: string }) => {
   return request<boolean>({
-    url: '/lsp-tianjin/stationInfo/selectPage',
+    url: '/stationInfo/selectPage',
     method: 'post',
     params: {
       pageNum: 1,
@@ -204,7 +204,7 @@ export const sameVerifyApi = (params: { stationNo?: string; stationName?: string
 // 新增/编辑站点
 export const addOrEditStationApi = (data: IStation) => {
   return request<string>({
-    url: data.stationId ? '/lsp-tianjin/stationInfo/update' : '/lsp-tianjin/stationInfo/add',
+    url: data.stationId ? '/stationInfo/update' : '/stationInfo/add',
     method: 'post',
     data: {
       station_no: data.stationNo,
@@ -228,7 +228,7 @@ export const addOrEditStationApi = (data: IStation) => {
 // 批量改变站点生产情况
 export const changeProStateApi = (params: { stationIdList: string[]; proState: IProState }) => {
   return request({
-    url: '/lsp-tianjin/stationInfo/realTimeFlag',
+    url: '/stationInfo/realTimeFlag',
     method: 'post',
     params: {
       id: params.stationIdList.join(),
@@ -243,7 +243,7 @@ export const changeProStateApi = (params: { stationIdList: string[]; proState: I
 // 删除站点
 export const deleteStationApi = (params: { stationId: string }) => {
   return request<string>({
-    url: '/lsp-tianjin/stationInfo/delete',
+    url: '/stationInfo/delete',
     method: 'get',
     params: {
       id: params.stationId

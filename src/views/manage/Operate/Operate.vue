@@ -30,7 +30,7 @@
               v-for="item in rolesList"
               :key="item.roleId"
               :label="item.roleName"
-              :value="item.roleId" />
+              :value="item.roleId!" />
           </el-select>
         </el-form-item>
       </el-form>

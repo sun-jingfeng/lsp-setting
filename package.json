@@ -5,8 +5,10 @@
   "scripts": {
     "dev": "vite",
     "build": "run-p type-check build-only",
+    "build-tj": "run-p type-check build-only-tj",
     "preview": "vite preview",
     "build-only": "vite build",
+    "build-only-tj": "vite build --mode production_tj",
     "type-check": "vue-tsc --noEmit",
     "lint:eslint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
     "lint:stylelint": "stylelint src/**/*.{css,less,scss,vue,html} --fix"
