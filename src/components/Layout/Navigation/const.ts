@@ -14,24 +14,20 @@ export const navigation: INavigation = [
   {
     label: '历史回算',
     routeName: 'history'
+  },
+  {
+    label: '权限管理',
+    children: [
+      {
+        label: '角色管理',
+        routeName: 'role'
+      },
+      {
+        label: '用户管理',
+        routeName: 'user'
+      }
+    ]
   }
-  // {
-  //   label: '权限管理',
-  //   children: [
-  //     {
-  //       label: '权限管理',
-  //       routeName: 'authority'
-  //     },
-  //     {
-  //       label: '权限管理',
-  //       routeName: 'authority'
-  //     },
-  //     {
-  //       label: '权限管理',
-  //       routeName: 'authority'
-  //     }
-  //   ]
-  // },
   // {
   //   label: '监控日志',
   //   routeName: 'page'
@@ -54,15 +50,16 @@ export const getIndex = (navi = navigation, index = ''): string | undefined => {
   }
 }
 
-export const getLabel = (navi = navigation) => {
+export const getLabel = (navi = navigation): string => {
   for (let i = 0; i < navi.length; i++) {
     if (navi[i].routeName === router.currentRoute.value.name) {
       return navi[i].label
     }
     if (navi[i].children?.length) {
-      return getIndex(navi[i].children)
+      return getLabel(navi[i].children)
     }
   }
+  return ''
 }
 
 export const imgPath = 'components/Layout/Navigation/images'

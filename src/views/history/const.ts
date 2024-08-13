@@ -9,6 +9,6 @@ export const titlesList: { title: string; description?: string }[] = [
   },
   {
     title: '添加灾害标签',
-    description: '请根据需求增加个例灾害标签。'
+    description: '请根据需求添加个例灾害标签。'
   }
 ]

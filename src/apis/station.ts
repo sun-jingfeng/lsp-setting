@@ -5,11 +5,14 @@ import type { IAreaList } from '../views/station/Operate/const'
 import { areaList, type IStation } from '../views/station/Operate/const'
 import { cloneDeep } from 'lodash'
 
-// export const mockApi = (params: { id: string }) => {
-//   return request({
-//     url: '/lsp-tianjin/radarType/delete',
+// export const mockApi = () => {
+//   return request<string>({
+//     url: '/lsp-tianjin/login',
 //     method: 'get',
-//     params
+//     data: {
+//       username: 'admin',
+//       password: 123456
+//     }
 //   }).then(res => {
 //     // 数据处理
 //     return res

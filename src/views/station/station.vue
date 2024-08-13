@@ -63,7 +63,7 @@
     <el-table :data="stationList" border @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="序号" width="60" align="center">
-        <template #default="{ row }">
+        <template #default="{ row }: { row: IStation }">
           <span>{{
             (pageNum - 1) * pageSize +
             (stationList?.findIndex(item => item.stationId === row.stationId) ?? 0) +
@@ -79,14 +79,14 @@
       <el-table-column prop="latitude" label="纬度(°)" />
       <el-table-column prop="altitude" label="高度(km)" />
       <el-table-column label="雷达型号">
-        <template #default="{ row }">
+        <template #default="{ row }: { row: IStation }">
           <span>{{
             radarModelOptions?.find(item => item.dataId === row.radarModelId)?.dataContent
           }}</span>
         </template>
       </el-table-column>
       <el-table-column label="雷达类型">
-        <template #default="{ row }">
+        <template #default="{ row }: { row: IStation }">
           <span>{{ radatTypeOptions?.find(item => item.value === row.radarType)?.label }}</span>
         </template>
       </el-table-column>
@@ -105,9 +105,9 @@
         </template>
       </el-table-column>
       <el-table-column label="操作" width="120">
-        <template #default="{ row }">
+        <template #default="{ row }: { row: IStation }">
           <el-button type="primary" link @click="editStation(row)">编辑</el-button>
-          <el-button type="danger" link @click="deleteStation(row.stationId, row.stationName)"
+          <el-button type="danger" link @click="deleteStation(row.stationId!, row.stationName)"
             >删除</el-button
           >
         </template>
@@ -287,7 +287,6 @@ const deleteStation = (stationId: string, stationName: string) => {
 </script>
 
 <style scoped lang="scss">
-/* stylelint-disable no-descending-specificity */
 .station {
   display: flex;
   flex-direction: column;

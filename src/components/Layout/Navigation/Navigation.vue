@@ -3,7 +3,20 @@
     <template v-for="(item, index) in navigation" :key="index">
       <el-sub-menu v-if="item.children?.length" :key="index" :index="String(index)">
         <template #title>
-          <img class="prefix" :src="getImgSrc(imgPath, item.label)" />
+          <img
+            class="prefix"
+            :src="
+              getImgSrc(
+                imgPath,
+                route.name === item.routeName
+                  ? systemStore.dark
+                    ? `${item.label}-active-dark`
+                    : `${item.label}-active`
+                  : systemStore.dark
+                  ? `${item.label}-dark`
+                  : item.label
+              )
+            " />
           <span>{{ item.label }}</span>
         </template>
         <el-menu-item
@@ -11,8 +24,7 @@
           :key="index2"
           :index="`${index}-${index2}`"
           @click="$router.push({ name: item2.routeName })">
-          <img class="prefix" :src="getImgSrc(imgPath, item2.label)" />
-          <span>{{ item2.label }}</span>
+          <span class="g-pl-lg">{{ item2.label }}</span>
           <img
             class="suffix"
             :src="getImgSrc(imgPath, systemStore.dark ? 'active-dark' : 'active')" />

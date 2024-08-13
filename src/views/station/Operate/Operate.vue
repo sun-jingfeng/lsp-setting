@@ -1,5 +1,5 @@
 <template>
-  <div class="operate-dialog">
+  <div class="operate">
     <el-dialog
       v-model="dialogVisible"
       :close-on-click-modal="false"
@@ -95,7 +95,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
 import type { IStation } from './const'
 import { areaList, repetitionKey, type IOperateType } from './const'
 import { formatNum } from '@/common/utils'
@@ -185,7 +184,7 @@ const formRules: FormRules<IStation> = {
             }
           )
         } else {
-          callback()
+          callback(new Error('请输入'))
         }
       },
       trigger: 'blur'
@@ -210,7 +209,7 @@ const formRules: FormRules<IStation> = {
             }
           )
         } else {
-          callback()
+          callback(new Error('请输入'))
         }
       },
       trigger: 'blur'
@@ -288,7 +287,7 @@ const onSubmit = () => {
 </script>
 
 <style scoped lang="scss">
-.operate-dialog {
+.operate {
   :deep(.el-dialog) {
     width: 410px;
   }
