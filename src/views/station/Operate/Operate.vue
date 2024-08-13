@@ -9,7 +9,7 @@
       <el-form
         ref="formRef"
         :model="formData"
-        label-position="left"
+        label-position="right"
         label-width="auto"
         :rules="formRules"
         v-loading="loading">
@@ -104,6 +104,7 @@ import type { FormRules } from 'element-plus'
 import { ElMessage, type FormInstance } from 'element-plus'
 import { radatTypeOptions } from '../const'
 import OperateList from '@/components/OperateList/OperateList.vue'
+import { cloneDeep } from 'lodash'
 
 type IProps = {
   operateType: IOperateType
@@ -150,7 +151,7 @@ const getRadarModelList = async () => {
 getRadarModelList()
 
 // 表单数据
-const formData = ref<IStation>(props.initFormData)
+const formData = ref<IStation>(cloneDeep(props.initFormData))
 const children = computed(
   () => areaList.find(item => item.value === formData.value.area)?.children ?? []
 )
@@ -170,19 +171,23 @@ const formRules: FormRules<IStation> = {
     {
       validator: (rule, value, callback) => {
         if (value) {
-          sameVerifyApi({ stationNo: value }).then(
-            ({ data: res }) => {
-              if (res && props.operateType === 'add') {
-                callback(new Error('已存在相同站号！'))
-              } else {
+          if (props.operateType === 'add') {
+            sameVerifyApi({ stationNo: value }).then(
+              ({ data: res }) => {
+                if (res) {
+                  callback(new Error('已存在相同站号！'))
+                } else {
+                  callback()
+                }
+              },
+              error => {
+                console.error(error)
                 callback()
               }
-            },
-            error => {
-              console.error(error)
-              callback()
-            }
-          )
+            )
+          } else {
+            callback()
+          }
         } else {
           callback(new Error('请输入'))
         }
@@ -195,19 +200,23 @@ const formRules: FormRules<IStation> = {
     {
       validator: (rule, value, callback) => {
         if (value) {
-          sameVerifyApi({ stationName: value }).then(
-            ({ data: res }) => {
-              if (res && props.operateType === 'add') {
-                callback(new Error('已存在相同站名！'))
-              } else {
+          if (props.operateType === 'add') {
+            sameVerifyApi({ stationName: value }).then(
+              ({ data: res }) => {
+                if (res) {
+                  callback(new Error('已存在相同站名！'))
+                } else {
+                  callback()
+                }
+              },
+              error => {
+                console.error(error)
                 callback()
               }
-            },
-            error => {
-              console.error(error)
-              callback()
-            }
-          )
+            )
+          } else {
+            callback()
+          }
         } else {
           callback(new Error('请输入'))
         }
@@ -215,10 +224,10 @@ const formRules: FormRules<IStation> = {
       trigger: 'blur'
     }
   ],
-  area: [{ required: true, message: '请选择', trigger: 'change' }],
-  province: [{ required: true, message: '请选择', trigger: 'change' }],
+  area: [{ required: true, message: '请选择', trigger: ['change', 'blur'] }],
+  province: [{ required: true, message: '请选择', trigger: ['change', 'blur'] }],
   longitude: [
-    { required: true, message: '请输入', trigger: 'change' },
+    { required: true, message: '请输入', trigger: ['change', 'blur'] },
     {
       validator: (rule, value, callback) => {
         const verify = () => callback(new Error('请输入10进制经度，-180~180'))
@@ -233,11 +242,11 @@ const formRules: FormRules<IStation> = {
         }
         callback()
       },
-      trigger: 'change'
+      trigger: ['change', 'blur']
     }
   ],
   latitude: [
-    { required: true, message: '请输入', trigger: 'change' },
+    { required: true, message: '请输入', trigger: ['change', 'blur'] },
     {
       validator: (rule, value, callback) => {
         const verify = () => callback(new Error('请输入10进制纬度，-90~90'))
@@ -252,12 +261,12 @@ const formRules: FormRules<IStation> = {
         }
         callback()
       },
-      trigger: 'change'
+      trigger: ['change', 'blur']
     }
   ],
-  altitude: [{ required: true, message: '请输入', trigger: 'change' }],
-  radarModelId: [{ required: true, message: '请选择', trigger: 'change' }],
-  radarType: [{ required: true, message: '请选择', trigger: 'change' }]
+  altitude: [{ required: true, message: '请输入', trigger: ['change', 'blur'] }],
+  radarModelId: [{ required: true, message: '请选择', trigger: ['change', 'blur'] }],
+  radarType: [{ required: true, message: '请选择', trigger: ['change', 'blur'] }]
 }
 
 // 提交

@@ -4,7 +4,7 @@
       v-model="dialogVisible"
       :close-on-click-modal="false"
       :close-on-press-escape="false"
-      :title="`${addOrEdit}角色`"
+      :title="`${addOrEdit}用户`"
       @close="emit('closeOperate')">
       <el-form
         ref="formRef"
@@ -13,8 +13,25 @@
         label-width="auto"
         :rules="formRules"
         v-loading="loading">
-        <el-form-item label="角色名称：" prop="roleName">
-          <el-input v-model="formData.roleName" clearable placeholder="请输入" />
+        <el-form-item label="用户名：" prop="username">
+          <el-input v-model="formData.username" clearable placeholder="请输入" />
+        </el-form-item>
+        <el-form-item label="密码：" prop="password">
+          <el-input
+            v-model="formData.password"
+            type="password"
+            clearable
+            placeholder="请输入"
+            show-password />
+        </el-form-item>
+        <el-form-item label="角色类型：" prop="roleId">
+          <el-select v-model="formData.roleId" clearable>
+            <el-option
+              v-for="item in rolesList"
+              :key="item.roleId"
+              :label="item.roleName"
+              :value="item.roleId" />
+          </el-select>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -28,23 +45,25 @@
 </template>
 
 <script setup lang="ts">
-import type { IOperateType, IRole } from './const'
+import type { IOperateType, IUser } from './const'
 import type { FormRules } from 'element-plus'
 import { ElMessage, type FormInstance } from 'element-plus'
-import { addRoleApi, sameVerifyApi } from '@/apis/role'
+import { addOrEditUserApi, sameVerifyApi } from '@/apis/manage'
+import { getRolesListApi } from '@/apis/role'
+import type { IPickResponse } from '@/common/axios'
 import { cloneDeep } from 'lodash'
 
 type IProps = {
   operateType?: IOperateType
-  initFormData?: IRole
+  initFormData?: IUser
 }
 
 const props = withDefaults(defineProps<IProps>(), {
   operateType: 'add',
   initFormData: () => ({
-    roleName: '',
-    creator: '',
-    createTime: ''
+    username: '',
+    password: '',
+    roleId: ''
   })
 })
 const emit = defineEmits<{
@@ -61,24 +80,39 @@ const closeOperate = (refresh = false) => {
   emit('closeOperate', refresh)
 }
 
+// 角色类型
+const rolesList = ref<IPickResponse<typeof getRolesListApi>['records']>()
+const getRolesList = async () => {
+  try {
+    const { data: res } = await getRolesListApi({
+      pageNum: 1,
+      pageSize: 99999
+    })
+    rolesList.value = res.records
+  } catch (error: any) {
+    console.error(error)
+  }
+}
+getRolesList()
+
 // 表单数据
-const formData = ref<IRole>(cloneDeep(props.initFormData))
+const formData = ref<IUser>(cloneDeep(props.initFormData))
 
 // 表单验证
-const formRules: FormRules<IRole> = {
-  roleName: [
+const formRules: FormRules<IUser> = {
+  username: [
     { required: true, message: '请输入', trigger: 'change' },
     {
       validator: (rule, value, callback) => {
         if (value) {
           if (props.operateType === 'add') {
-            sameVerifyApi({ roleName: value }).then(
+            sameVerifyApi({ username: value }).then(
               () => {
                 callback()
               },
               error => {
                 console.error(error)
-                callback(new Error('已存在相同角色名称！'))
+                callback(new Error('已存在相同用户名称！'))
               }
             )
           } else {
@@ -90,7 +124,9 @@ const formRules: FormRules<IRole> = {
       },
       trigger: 'blur'
     }
-  ]
+  ],
+  password: [{ required: true, message: '请输入', trigger: ['change', 'blur'] }],
+  roleId: [{ required: true, message: '请输入', trigger: ['change', 'blur'] }]
 }
 
 // 提交
@@ -101,7 +137,7 @@ const onSubmit = () => {
     if (valid) {
       loading.value = true
       try {
-        await addRoleApi(formData.value)
+        await addOrEditUserApi(props.operateType, formData.value)
         ElMessage.success(`${addOrEdit.value}台站成功！`)
         closeOperate(true)
       } catch (error: any) {

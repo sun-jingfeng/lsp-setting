@@ -5,7 +5,7 @@
       <el-form ref="formRef" :model="formData">
         <el-form-item
           prop="username"
-          :rules="[{ required: true, message: '请输入用户名', trigger: 'change' }]">
+          :rules="[{ required: true, message: '请输入用户名', trigger: ['change', 'blur'] }]">
           <el-input
             size="large"
             v-model="formData.username"
@@ -16,7 +16,7 @@
         </el-form-item>
         <el-form-item
           prop="password"
-          :rules="[{ required: true, message: '请输入密码', trigger: 'change' }]">
+          :rules="[{ required: true, message: '请输入密码', trigger: ['change', 'blur'] }]">
           <el-input
             size="large"
             type="password"

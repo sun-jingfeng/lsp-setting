@@ -24,7 +24,7 @@ export const navigation: INavigation = [
       },
       {
         label: '用户管理',
-        routeName: 'user'
+        routeName: 'manage'
       }
     ]
   }
