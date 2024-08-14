@@ -95,7 +95,7 @@ export const deleteRadarModelApi = (params: { dataId: string }) => {
 }
 
 // 获取雷达区域选项
-export const getRadarAreaListApi = () => {
+export const getStationNoOptionsApi = () => {
   return request<IAreaList>({
     url: '/stationInfo/selectPage',
     method: 'post',
@@ -127,7 +127,12 @@ export const getRadarAreaListApi = () => {
           formatAreaList(item.children)
           item.num = item.children.reduce((acc, cur) => acc + (cur.num ?? 0), 0)
         } else {
-          item.num = records.filter(item2 => item2.province === item.value).length
+          const targetRecords = records.filter(item2 => item2.province === item.value)
+          item.num = targetRecords.length
+          item.children = targetRecords.map(item3 => ({
+            label: `${item3.stationName}${item3.stationNo}`,
+            value: item3.stationNo
+          }))
         }
         item.label = `${item.label}（${item.num}）`
       })
@@ -141,6 +146,7 @@ export const getRadarAreaListApi = () => {
 export const getStationListApi = (params: {
   pageNum: number
   pageSize: number
+  stationNoList?: string[]
   radarAreaList?: string[]
   proState?: IProState
   radarModelIdList?: string[]
@@ -157,6 +163,7 @@ export const getStationListApi = (params: {
     params: {
       pageNum: params.pageNum,
       pageSize: params.pageSize,
+      stationNo: params.stationNoList?.join() || undefined,
       province: params.radarAreaList?.join() || undefined,
       realTimeFlag: params.proState === -1 ? undefined : params.proState,
       radarTypeID: params.radarModelIdList?.join() || undefined,

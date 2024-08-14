@@ -6,8 +6,8 @@
         <li class="left">
           <span>雷达站选择：</span>
           <el-tree-select
-            v-model="filterData.radarAreaList"
-            :data="radarAreaList"
+            v-model="filterData.stationNoList"
+            :data="stationNoOptions"
             multiple
             collapse-tags
             collapse-tags-tooltip
@@ -133,7 +133,7 @@ import type { IProState } from './const'
 import { initFilterData, radatTypeOptions, stateOptions } from './const'
 import { CirclePlus } from '@element-plus/icons-vue'
 import Operate from './Operate/Operate.vue'
-import { getRadarAreaListApi } from '@/apis/station'
+import { getStationNoOptionsApi } from '@/apis/station'
 import {
   changeProStateApi,
   deleteStationApi,
@@ -146,12 +146,12 @@ import { ElMessage, ElMessageBox } from 'element-plus'
 
 // 筛选区
 const filterData = ref(initFilterData())
-const radarAreaList = ref<IPickResponse<typeof getRadarAreaListApi>>()
+const stationNoOptions = ref<IPickResponse<typeof getStationNoOptionsApi>>()
 const radarModelOptions = ref<IPickResponse<typeof getRadarModelListApi>>()
 const getRadarAreaList = async () => {
   try {
-    const { data: res } = await getRadarAreaListApi()
-    radarAreaList.value = res
+    const { data: res } = await getStationNoOptionsApi()
+    stationNoOptions.value = res
   } catch (error: any) {
     console.error(error)
   }
@@ -187,7 +187,7 @@ async function getStationList() {
     const { data: res } = await getStationListApi({
       pageNum: pageNum.value,
       pageSize: pageSize.value,
-      radarAreaList: filterData.value.radarAreaList,
+      stationNoList: filterData.value.stationNoList,
       proState: filterData.value.proState,
       radarModelIdList: filterData.value.radarModelIdList,
       radarTypeList: filterData.value.radarTypeList

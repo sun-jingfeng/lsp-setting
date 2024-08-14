@@ -1,4 +1,5 @@
 import router from '@/router'
+import { useUserStore } from '@/stores/user'
 
 type INavigation = {
   label: string
@@ -6,39 +7,23 @@ type INavigation = {
   children?: INavigation
 }[]
 
-export const navigation: INavigation = [
-  {
-    label: '台站管理',
-    routeName: 'station'
-  },
-  {
-    label: '历史回算',
-    routeName: 'history'
-  },
-  {
-    label: '权限管理',
-    children: [
-      {
-        label: '角色管理',
-        routeName: 'role'
-      },
-      {
-        label: '用户管理',
-        routeName: 'manage'
-      }
-    ]
-  }
-  // {
-  //   label: '监控日志',
-  //   routeName: 'page'
-  // },
-  // {
-  //   label: '其他栏目',
-  //   routeName: 'page'
-  // }
-]
+export const getRoutesList = (): INavigation => {
+  const result =
+    useUserStore()
+      .getAuthorityRoutesList()
+      .find(route => route.path === '/')?.children ?? []
 
-export const getIndex = (navi = navigation, index = ''): string | undefined => {
+  const recursion = (navi = result): INavigation =>
+    navi.map(route => ({
+      label: route.meta?.pageName ?? '',
+      routeName: (route.name ?? '') as string,
+      ...(route.children?.length ? { children: recursion(route.children) } : {})
+    })) ?? []
+
+  return recursion(result)
+}
+
+export const getIndex = (navi = getRoutesList(), index = ''): string | undefined => {
   for (let i = 0; i < navi.length; i++) {
     const newIndex = index + `${index.length ? '-' : ''}${i}`
     if (navi[i].routeName === router.currentRoute.value.name) {
@@ -50,7 +35,7 @@ export const getIndex = (navi = navigation, index = ''): string | undefined => {
   }
 }
 
-export const getLabel = (navi = navigation): string => {
+export const getLabel = (navi = getRoutesList()): string => {
   for (let i = 0; i < navi.length; i++) {
     if (navi[i].routeName === router.currentRoute.value.name) {
       return navi[i].label

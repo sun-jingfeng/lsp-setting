@@ -1,6 +1,6 @@
 <template>
   <el-menu class="navigation" :default-active="getIndex()">
-    <template v-for="(item, index) in navigation" :key="index">
+    <template v-for="(item, index) in getRoutesList()" :key="index">
       <el-sub-menu v-if="item.children?.length" :key="index" :index="String(index)">
         <template #title>
           <img
@@ -56,7 +56,7 @@
 
 <script setup lang="ts">
 import { useSystemStore } from '@/stores/system'
-import { getIndex, imgPath, navigation } from './const'
+import { getIndex, imgPath, getRoutesList } from './const'
 import { getImgSrc } from '@/common/utils'
 
 const systemStore = useSystemStore()

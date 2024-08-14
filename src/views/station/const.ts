@@ -61,12 +61,12 @@ export const radatTypeOptions: { label: string; value: IRadarType }[] = [
 ]
 
 export const initFilterData = (): {
-  radarAreaList: string[]
+  stationNoList: string[]
   proState?: IProState
   radarModelIdList: string[]
   radarTypeList: string[]
 } => ({
-  radarAreaList: [],
+  stationNoList: [],
   radarModelIdList: [],
   radarTypeList: []
 })
