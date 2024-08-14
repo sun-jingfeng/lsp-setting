@@ -244,15 +244,3 @@ export const radarProductOptions: IRadarOptions = [
     ]
   }
 ]
-
-function formatRadarProductOptions(i_radarProductOptions: IRadarOptions) {
-  i_radarProductOptions.forEach(item => {
-    if (item.value === undefined) {
-      item.value = Math.random().toFixed(10)
-    }
-    if (item.children?.length) {
-      formatRadarProductOptions(item.children)
-    }
-  })
-}
-formatRadarProductOptions(radarProductOptions)

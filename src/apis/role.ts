@@ -36,18 +36,18 @@ export const getRolesListApi = (params: { pageNum: number; pageSize: number }) =
           roleName: item.roleName,
           creator: item.creator,
           createTime: item.creationTime,
-          authority: item.permissions
+          authoritiesList: item.permissions
         } as any) ?? [])
     )
     res.data.records.forEach(item => {
-      if (item.authority) {
+      if (item.authoritiesList) {
         try {
-          item.authority = JSON.parse(item.authority as any as string)
+          item.authoritiesList = JSON.parse(item.authoritiesList as any as string)
         } catch (error) {
-          item.authority = []
+          item.authoritiesList = []
         }
       } else {
-        item.authority = []
+        item.authoritiesList = []
       }
     })
     return res
@@ -79,18 +79,18 @@ export const addRoleApi = (data: IRole) => {
 }
 
 // 编辑角色权限
-export const editRoleApi = (data: { roleId: string; authority: string[] }) => {
+export const editRoleApi = (data: { roleId: string; authoritiesList: string[] }) => {
   try {
-    data.authority = JSON.stringify(data.authority) as any
+    data.authoritiesList = JSON.stringify(data.authoritiesList) as any
   } catch (error) {
-    data.authority = '' as any
+    data.authoritiesList = '' as any
   }
   return request({
     url: '/role/updatePermissions',
     method: 'post',
     data: {
       roleId: data.roleId,
-      permissions: data.authority
+      permissions: data.authoritiesList
     }
   }).then(res => {
     // 数据处理

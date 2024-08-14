@@ -33,6 +33,9 @@ import type { FormRules } from 'element-plus'
 import { ElMessage, type FormInstance } from 'element-plus'
 import { addRoleApi, sameVerifyApi } from '@/apis/role'
 import { cloneDeep } from 'lodash'
+import { useUserStore } from '@/stores/user'
+
+const userStore = useUserStore()
 
 type IProps = {
   operateType?: IOperateType
@@ -40,12 +43,7 @@ type IProps = {
 }
 
 const props = withDefaults(defineProps<IProps>(), {
-  operateType: 'add',
-  initFormData: () => ({
-    roleName: '',
-    creator: '',
-    createTime: ''
-  })
+  operateType: 'add'
 })
 const emit = defineEmits<{
   (e: 'closeOperate', refresh?: boolean): void
@@ -62,7 +60,15 @@ const closeOperate = (refresh = false) => {
 }
 
 // 表单数据
-const formData = ref<IRole>(cloneDeep(props.initFormData))
+const formData = ref<IRole>(
+  props.initFormData
+    ? cloneDeep(props.initFormData)
+    : {
+        roleName: '',
+        creator: userStore.userinfo?.username ?? '',
+        createTime: ''
+      }
+)
 
 // 表单验证
 const formRules: FormRules<IRole> = {

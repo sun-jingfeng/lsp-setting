@@ -1,5 +1,5 @@
 /* eslint-disable arrow-body-style */
-import { request, requestPackage } from '@/common/axios'
+import { request } from '@/common/axios'
 
 export const loginApi = (data: { username: string; password: string }) => {
   return request<string>({
@@ -12,15 +12,23 @@ export const loginApi = (data: { username: string; password: string }) => {
   })
 }
 
-export const loginApiPackage = (data: { username: string; password: string; cid: string }) => {
-  const responsePackage = requestPackage<string>({
-    url: '/admin/log/login',
-    method: 'post',
-    params: data
-  })
-  responsePackage.response = responsePackage.response.then(res => {
-    // 数据处理
+export const getUserInfoApi = () => {
+  return request<{
+    username: string
+    authoritiesList: string[]
+  }>({
+    url: '/user/queryUserNameAndPermission',
+    method: 'get'
+  }).then(res => {
+    res.data = {
+      username: res.data.username,
+      authoritiesList: (res as any).data.permissions
+    }
+    try {
+      res.data.authoritiesList = JSON.parse(res.data.authoritiesList as any as string)
+    } catch (error) {
+      res.data.authoritiesList = []
+    }
     return res
   })
-  return responsePackage
 }

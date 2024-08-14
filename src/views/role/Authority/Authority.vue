@@ -54,7 +54,7 @@ const editRole = async () => {
   try {
     await editRoleApi({
       roleId: props.roleId,
-      authority: (treeRef.value?.getCheckedKeys() ?? []) as string[]
+      authoritiesList: (treeRef.value?.getCheckedKeys(true) ?? []) as string[]
     })
     closeAuthority(true)
     ElMessage.success('权限配置成功！')

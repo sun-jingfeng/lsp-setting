@@ -5,6 +5,7 @@ import { loginPath } from '@/views/login/const'
 
 declare module 'vue-router' {
   interface RouteMeta {
+    pageName?: string
     usePathKey1?: boolean
     usePathKey2?: boolean
   }
@@ -17,36 +18,61 @@ const routes: RouteRecordRaw[] = [
     component: () => import('@/views/login/login.vue')
   },
   {
+    path: '/:pathMatch(.*)*',
+    component: () => import('@/views/not-found/not-found.vue')
+  }
+]
+
+export const getDynamicRoutes: () => RouteRecordRaw[] = () => [
+  {
     path: '/',
     name: 'layout',
     component: Layout,
-    redirect: '/station',
+    meta: {
+      pageName: '基础页'
+    },
     children: [
       {
         path: 'station',
         name: 'station',
-        component: () => import('@/views/station/station.vue')
+        component: () => import('@/views/station/station.vue'),
+        meta: {
+          pageName: '台站管理'
+        }
       },
       {
         path: 'history',
         name: 'history',
-        component: () => import('@/views/history/history.vue')
+        component: () => import('@/views/history/history.vue'),
+        meta: {
+          pageName: '历史回算'
+        }
       },
       {
-        path: 'role',
-        name: 'role',
-        component: () => import('@/views/role/role.vue')
-      },
-      {
-        path: 'manage',
-        name: 'manage',
-        component: () => import('@/views/manage/manage.vue')
+        path: 'authority',
+        meta: {
+          pageName: '权限管理'
+        },
+        children: [
+          {
+            path: 'role',
+            name: 'role',
+            component: () => import('@/views/role/role.vue'),
+            meta: {
+              pageName: '角色管理'
+            }
+          },
+          {
+            path: 'manage',
+            name: 'manage',
+            component: () => import('@/views/manage/manage.vue'),
+            meta: {
+              pageName: '用户管理'
+            }
+          }
+        ]
       }
     ]
-  },
-  {
-    path: '/:pathMatch(.*)*',
-    component: () => import('@/views/not-found/not-found.vue')
   }
 ]
 

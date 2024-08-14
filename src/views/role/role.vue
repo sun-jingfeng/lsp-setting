@@ -26,7 +26,7 @@
           <el-button
             type="primary"
             link
-            @click="operateAuthority(row.roleId ?? '', row.authority ?? [])">
+            @click="operateAuthority(row.roleId ?? '', row.authoritiesList ?? [])">
             <img class="button-icon" src="./images/branch.png" />
             <span>权限配置</span>
           </el-button>

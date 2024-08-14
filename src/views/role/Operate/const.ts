@@ -5,5 +5,5 @@ export type IRole = {
   roleName: string
   creator: string
   createTime?: string
-  authority?: string[]
+  authoritiesList?: string[]
 }
