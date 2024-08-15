@@ -2,6 +2,8 @@ import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 import Layout from '@/components/Layout/Layout.vue'
 import { CONFIG } from '@/common/const'
 import { loginPath } from '@/views/login/const'
+import type { IAuthorityTree } from '@/views/role/Authority/const'
+import path from 'path-browserify'
 
 declare module 'vue-router' {
   interface RouteMeta {
@@ -75,6 +77,15 @@ export const getDynamicRoutes: () => RouteRecordRaw[] = () => [
     ]
   }
 ]
+
+export const getAuthorityTree = (i_routes = getDynamicRoutes(), basePath = '/'): IAuthorityTree =>
+  i_routes.map(item => ({
+    label: item.meta?.pageName ?? '',
+    value: path.resolve(basePath, item.path),
+    ...(item.children?.length
+      ? { children: getAuthorityTree(item.children, path.resolve(basePath, item.path)) }
+      : {})
+  }))
 
 const router = createRouter({
   history: createWebHistory(CONFIG.basePath),

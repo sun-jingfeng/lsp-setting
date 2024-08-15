@@ -1,32 +1,42 @@
+import { getAuthorityTree } from '@/router'
 import { radarProductOptions } from '@/views/history/Content1/const'
 
-type IAuthorityTree = { label: string; value: string; children?: IAuthorityTree }[]
+export type IAuthorityTree = { label: string; value?: string; children?: IAuthorityTree }[]
 
 export const authorityTree: IAuthorityTree = [
   {
     label: '全部',
     value: '全部',
     children: [
-      {
-        label: '首页',
-        value: '首页'
-      },
+      // {
+      //   label: '首页',
+      //   value: 'dtscreenSta'
+      // },
       {
         label: '单站',
-        value: '单站',
-        children: radarProductOptions as IAuthorityTree
+        value: 'lsp-station',
+        children: [
+          // {
+          //   label: '跳转'
+          // },
+          {
+            label: '产品显示',
+            children: radarProductOptions
+          }
+        ]
       },
-      {
-        label: '单省',
-        value: '单省'
-      },
-      {
-        label: '三维',
-        value: '三维'
-      },
+      // {
+      //   label: '单省',
+      //   value: 'Ndtshortwarn'
+      // },
+      // {
+      //   label: '三维',
+      //   value: 'radar3dLSP'
+      // },
       {
         label: '后台管理',
-        value: '后台管理'
+        value: 'lsp-setting',
+        children: getAuthorityTree()
       }
     ]
   }

@@ -25,7 +25,9 @@ export const getUserInfoApi = () => {
       authoritiesList: (res as any).data.permissions
     }
     try {
-      res.data.authoritiesList = JSON.parse(res.data.authoritiesList as any as string)
+      res.data.authoritiesList = JSON.parse(res.data.authoritiesList as any as string)[
+        'lsp-setting'
+      ]
     } catch (error) {
       res.data.authoritiesList = []
     }

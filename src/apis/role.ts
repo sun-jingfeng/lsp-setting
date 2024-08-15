@@ -1,5 +1,7 @@
 /* eslint-disable arrow-body-style */
 import { request } from '@/common/axios'
+import type { IAuthorityTree } from '@/views/role/Authority/const'
+import { authorityTree } from '@/views/role/Authority/const'
 import type { IRole } from '@/views/role/Operate/const'
 
 // export const mockApi = () => {
@@ -40,15 +42,19 @@ export const getRolesListApi = (params: { pageNum: number; pageSize: number }) =
         } as any) ?? [])
     )
     res.data.records.forEach(item => {
-      if (item.authoritiesList) {
+      let result: any = item.authoritiesList
+      if (result) {
         try {
-          item.authoritiesList = JSON.parse(item.authoritiesList as any as string)
+          result = JSON.parse(result as any as string)
         } catch (error) {
-          item.authoritiesList = []
+          result = {}
         }
       } else {
-        item.authoritiesList = []
+        result = {}
       }
+      item.authoritiesList = Object.keys(result)
+        .map(item2 => result[item2])
+        .reduce((acc, cur) => [...acc, ...cur], [] as string[])
     })
     return res
   })
@@ -80,17 +86,52 @@ export const addRoleApi = (data: IRole) => {
 
 // 编辑角色权限
 export const editRoleApi = (data: { roleId: string; authoritiesList: string[] }) => {
+  let result =
+    authorityTree[0].children
+      ?.map(item => item.value)
+      .reduce((acc, cur) => {
+        cur && (acc[cur] = [])
+        return acc
+      }, {} as Record<string, string[]>) ?? {}
+  data.authoritiesList.forEach(authority => {
+    authorityTree[0].children
+      ?.map(item => item.value)
+      .some(key => {
+        if (
+          hasAuthority(
+            authorityTree[0].children?.find(item => item.value === key)?.children ?? [],
+            authority
+          )
+        ) {
+          key && result[key].push(authority)
+          return true
+        }
+      })
+  })
+  function hasAuthority(i_authorityTree: IAuthorityTree, i_authority: string) {
+    if (i_authorityTree.length) {
+      for (let i = 0; i < i_authorityTree.length; i++) {
+        if (i_authorityTree[i].value === i_authority) {
+          return true
+        }
+        if (hasAuthority(i_authorityTree[i].children ?? [], i_authority)) {
+          return true
+        }
+      }
+    }
+    return false
+  }
   try {
-    data.authoritiesList = JSON.stringify(data.authoritiesList) as any
+    result = JSON.stringify(result) as any
   } catch (error) {
-    data.authoritiesList = '' as any
+    result = '' as any
   }
   return request({
     url: '/role/updatePermissions',
     method: 'post',
     data: {
       roleId: data.roleId,
-      permissions: data.authoritiesList
+      permissions: result
     }
   }).then(res => {
     // 数据处理

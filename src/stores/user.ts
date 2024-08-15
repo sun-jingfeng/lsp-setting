@@ -23,14 +23,18 @@ export const useUserStore = defineStore<string, IState, IGetters, IActions>('use
       const result: RouteRecordRaw[] = []
       dynamicRoutes.forEach(route => {
         const routePath = path.resolve(basePath, route.path)
-        if (!CONFIG.authorityRoute || this.userinfo?.authoritiesList?.includes?.(routePath)) {
-          result.push(route)
-          if (route.children) {
-            route.children = this.getAuthorityRoutesList(route.children, routePath)
-            if (route.children?.length) {
-              route.redirect = path.resolve(basePath, route.children[0].path)
-            }
+        if (route.children) {
+          route.children = this.getAuthorityRoutesList(route.children, routePath)
+          if (route.children?.length) {
+            route.redirect = path.resolve(basePath, route.children[0].path)
           }
+        }
+        if (
+          !CONFIG.authorityRoute ||
+          route.children?.length ||
+          this.userinfo?.authoritiesList?.includes?.(routePath)
+        ) {
+          result.push(route)
         }
       })
       return result
