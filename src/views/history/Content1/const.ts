@@ -126,7 +126,7 @@ export const radarProductOptions: IRadarOptions = [
         value: '2052'
       },
       {
-        label: '粒子相态识别',
+        label: '水凝物分类',
         children: [
           {
             label: '水凝物分类 HCL - 模糊逻辑',
@@ -156,19 +156,19 @@ export const radarProductOptions: IRadarOptions = [
     label: '强对流产品',
     children: [
       {
-        label: '暴雨所算法V1.0',
+        label: '龙卷涡旋特征V1.0',
         value: '3000'
       },
       {
-        label: '暴雨所算法V2.0',
+        label: '龙卷涡旋特征V2.0',
         value: '3010'
       },
       {
-        label: '南大TDS算法',
+        label: '龙卷碎片特征V1.0',
         value: '3020'
       },
       {
-        label: '南大风暴算法',
+        label: '龙卷碎片特征V2.0',
         value: '3030'
       },
       {
@@ -197,7 +197,7 @@ export const radarProductOptions: IRadarOptions = [
         value: 'same-2020'
       },
       {
-        label: 'ROSE识别产品',
+        label: '中气旋 - ROSE',
         value: '3050'
       },
       {

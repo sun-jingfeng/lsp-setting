@@ -181,4 +181,9 @@
       background-color: #24446a !important;
     }
   }
+
+  .el-popper.is-light{
+    --el-bg-color-overlay: #1d3c5f;
+    --el-border-color-light: #1d3c5f;
+  }
 }

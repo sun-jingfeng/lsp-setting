@@ -6,3 +6,5 @@ export const CONFIG = {
   baseUrl: import.meta.env.VITE_BASE_URL,
   homeUrl: import.meta.env.VITE_HOME_URL
 }
+
+export const showLogo = import.meta.env.MODE !== 'production'

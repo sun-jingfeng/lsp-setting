@@ -216,7 +216,10 @@ const editStation = (i_initFormData: IStation) => {
   showOperate.value = true
 }
 const closeOperate = (refresh = false) => {
-  refresh && getStationList()
+  if (refresh) {
+    getStationList()
+    getRadarAreaList()
+  }
   setTimeout(() => {
     showOperate.value = false
   }, 200)
@@ -274,7 +277,13 @@ const deleteStation = (stationId: string, stationName: string) => {
       try {
         await deleteStationApi({ stationId })
         loading.value = false
+        const stationNo = stationList.value?.find(item => item.stationId === stationId)?.stationNo
+        stationNo &&
+          (filterData.value.stationNoList = filterData.value.stationNoList.filter(
+            item => item !== stationNo
+          ))
         getStationList()
+        getRadarAreaList()
         ElMessage.success('删除台站成功！')
       } catch (error: any) {
         ElMessage.warning('删除台站失败！')

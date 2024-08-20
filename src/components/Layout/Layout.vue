@@ -15,10 +15,10 @@
         <img :src="getImgSrc(imgPath, systemStore.dark ? 'apperance-dark' : 'apperance')" />
         <span>{{ systemStore.dark ? '浅色' : '深色' }}模式</span>
       </div>
-      <div class="bottom" @click="openHome">
+      <!-- <div class="bottom" @click="openHome">
         <img :src="getImgSrc(imgPath, systemStore.dark ? 'home-dark' : 'home')" />
         <span>回到首页</span>
-      </div>
+      </div> -->
     </div>
     <div class="main">
       <router-view v-slot="{ Component, route }">
@@ -33,13 +33,13 @@
 </template>
 
 <script setup lang="ts">
-import { CONFIG } from '@/common/const'
+import { CONFIG, showLogo } from '@/common/const'
 import { RouterView } from 'vue-router'
 import Navigation from './Navigation/Navigation.vue'
 import { useSystemStore } from '@/stores/system'
 import { toggleDark } from '@/common/dark'
 import { getImgSrc } from '@/common/utils'
-import { imgPath, showLogo } from './const'
+import { imgPath } from './const'
 
 const systemStore = useSystemStore()
 
