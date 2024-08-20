@@ -130,7 +130,7 @@ export const getStationNoOptionsApi = () => {
           const targetRecords = records.filter(item2 => item2.province === item.value)
           item.num = targetRecords.length
           item.children = targetRecords.map(item3 => ({
-            label: `${item3.stationName}${item3.stationNo}`,
+            label: `${item3.stationName} ${item3.stationNo}`,
             value: item3.stationNo
           }))
         }

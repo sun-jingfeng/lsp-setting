@@ -3,7 +3,7 @@
     <div class="center">
       <div class="title">
         <img v-if="showLogo" src="./images/title.png" />
-        <span>{{ CONFIG.appName }}</span>
+        <img src="./images/name.png" />
       </div>
       <div class="content">
         <el-form ref="formRef" :model="formData" label-position="top">
@@ -46,7 +46,7 @@ import { setToken } from '@/common/utils'
 import { User, Lock } from '@element-plus/icons-vue'
 import { ElForm, ElMessage } from 'element-plus'
 import { redirectKey } from './const'
-import { CONFIG, showLogo } from '@/common/const'
+import { showLogo } from '@/common/const'
 
 const router = useRouter()
 const route = useRoute()
@@ -65,9 +65,9 @@ const onSubmit = async () => {
         const { data: res } = await loginApi(formData)
         setToken('Bearer ' + res)
         router.push((route.query[redirectKey] ?? '/') as string)
-        ElMessage.success('登陆成功！')
+        ElMessage.success('登录成功！')
       } catch (error: any) {
-        ElMessage.error(error.msg || '登陆失败！')
+        ElMessage.error(error.msg || '登录失败！')
         console.error(error)
       } finally {
         loading.value = false
@@ -98,10 +98,6 @@ const onSubmit = async () => {
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 36px;
-      font-style: italic;
-      color: #f0f7f9;
-      letter-spacing: 4px;
 
       > img {
         margin-right: 12px;
@@ -111,7 +107,7 @@ const onSubmit = async () => {
     > .content {
       width: 492px;
       height: 468px;
-      padding: 100px 100px 0;
+      padding: 100px 80px 0;
       background-image: url('./images/bg2.png');
       background-repeat: no-repeat;
       background-size: 100% 100%;
@@ -128,7 +124,7 @@ const onSubmit = async () => {
             --el-input-border-radius: 0;
             --el-border-color: #4160df !important;
             --el-border-color-hover: #53b2ff !important;
-            --el-input-bg-color: #292d75 !important;
+            --el-input-bg-color: transparent !important;
           }
         }
       }

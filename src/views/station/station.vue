@@ -4,7 +4,7 @@
       <p class="g-decorate">{{ getLabel() }}</p>
       <ul class="filter">
         <li class="left">
-          <span>雷达站选择：</span>
+          <span>雷达台站：</span>
           <el-tree-select
             v-model="filterData.stationNoList"
             :data="stationNoOptions"

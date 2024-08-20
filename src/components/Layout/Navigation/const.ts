@@ -30,7 +30,10 @@ export const getIndex = (navi = getRoutesList(), index = ''): string | undefined
       return newIndex
     }
     if (navi[i].children?.length) {
-      return getIndex(navi[i].children, newIndex)
+      const result = getIndex(navi[i].children, newIndex)
+      if (result) {
+        return result
+      }
     }
   }
 }
@@ -41,7 +44,10 @@ export const getLabel = (navi = getRoutesList()): string => {
       return navi[i].label
     }
     if (navi[i].children?.length) {
-      return getLabel(navi[i].children)
+      const result = getLabel(navi[i].children)
+      if (result) {
+        return result
+      }
     }
   }
   return ''

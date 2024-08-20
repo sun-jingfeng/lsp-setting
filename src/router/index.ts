@@ -73,6 +73,14 @@ export const getDynamicRoutes: () => RouteRecordRaw[] = () => [
             }
           }
         ]
+      },
+      {
+        path: 'monitor',
+        name: 'monitor',
+        component: () => import('@/views/monitor/monitor.vue'),
+        meta: {
+          pageName: '监控日志'
+        }
       }
     ]
   }
