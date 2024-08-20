@@ -3,6 +3,8 @@ import { radarProductOptions } from '@/views/history/Content1/const'
 
 export type IAuthorityTree = { label: string; value?: string; children?: IAuthorityTree }[]
 
+export type ISystem = 'dtscreenSta' | 'lsp-station' | 'Ndtshortwarn' | 'radar3dLSP' | 'lsp-setting'
+
 export const authorityTree: IAuthorityTree = [
   {
     label: '全部',
@@ -10,11 +12,11 @@ export const authorityTree: IAuthorityTree = [
     children: [
       // {
       //   label: '首页',
-      //   value: 'dtscreenSta'
+      //   value: 'dtscreenSta' as ISystem
       // },
       {
         label: '单站',
-        value: 'lsp-station',
+        value: 'lsp-station' as ISystem,
         children: [
           // {
           //   label: '跳转'
@@ -27,15 +29,15 @@ export const authorityTree: IAuthorityTree = [
       },
       // {
       //   label: '单省',
-      //   value: 'Ndtshortwarn'
+      //   value: 'Ndtshortwarn' as ISystem
       // },
       // {
       //   label: '三维',
-      //   value: 'radar3dLSP'
+      //   value: 'radar3dLSP' as ISystem
       // },
       {
         label: '后台管理',
-        value: 'lsp-setting',
+        value: 'lsp-setting' as ISystem,
         children: getAuthorityTree()
       }
     ]

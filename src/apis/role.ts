@@ -1,6 +1,6 @@
 /* eslint-disable arrow-body-style */
 import { request } from '@/common/axios'
-import type { IAuthorityTree } from '@/views/role/Authority/const'
+import type { IAuthorityTree, ISystem } from '@/views/role/Authority/const'
 import { authorityTree } from '@/views/role/Authority/const'
 import type { IRole } from '@/views/role/Operate/const'
 
@@ -80,6 +80,24 @@ export const addRoleApi = (data: IRole) => {
     data
   }).then(res => {
     // 数据处理
+    return res
+  })
+}
+
+// 获取全部权限
+export function getAllAuthoritiesApi(params: { system: ISystem }) {
+  return request<IAuthorityTree>({
+    url: '/permissions/query',
+    method: 'get',
+    params: {
+      menu: params.system
+    }
+  }).then(res => {
+    try {
+      res.data = JSON.parse(res.data as any as string)
+    } catch (error) {
+      res.data = []
+    }
     return res
   })
 }

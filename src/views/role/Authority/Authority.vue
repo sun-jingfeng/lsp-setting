@@ -26,8 +26,9 @@
 
 <script setup lang="ts">
 import { ElMessage, type TreeInstance } from 'element-plus'
+import type { ISystem } from './const'
 import { authorityTree } from './const'
-import { editRoleApi } from '@/apis/role'
+import { editRoleApi, getAllAuthoritiesApi } from '@/apis/role'
 
 type IProps = {
   roleId: string
@@ -45,6 +46,29 @@ const closeAuthority = (refresh = false) => {
   dialogVisible.value = false
   emit('closeAuthority', refresh)
 }
+
+// 权限数据
+const getAllAuthorities = () => {
+  ;(['dtscreenSta', 'lsp-station', 'Ndtshortwarn', 'radar3dLSP'] as ISystem[]).forEach(
+    async system => {
+      try {
+        const { data: res } = await getAllAuthoritiesApi({ system })
+        if (res.length) {
+          if (system !== 'lsp-station') {
+            const target = authorityTree.find(item => item.value === system)
+            target && (target.children = res)
+          } else {
+            const target = authorityTree[1].children?.[0]
+            target && (target.children = res)
+          }
+        }
+      } catch (error: any) {
+        console.error(error)
+      }
+    }
+  )
+}
+getAllAuthorities()
 
 // 树
 const loading = ref(false)
