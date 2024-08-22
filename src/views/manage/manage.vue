@@ -32,11 +32,24 @@
       </el-table-column>
       <el-table-column label="操作" width="200" align="center">
         <template #default="{ row }: { row: IUser }">
-          <el-button type="primary" link @click="editUser(row)">
+          <el-button
+            type="primary"
+            link
+            @click="editUser(row)"
+            :disabled="
+              userStore.userinfo?.username !== adminUserName &&
+              row.username !== userStore.userinfo?.username
+            ">
             <img class="button-icon" src="./images/edit.png" />
             <span>编辑</span>
           </el-button>
-          <el-button type="danger" link @click="deleteUser(row.userId!, row.username)">
+          <el-button
+            type="danger"
+            link
+            @click="deleteUser(row.userId!, row.username)"
+            :disabled="
+              row.username === adminUserName || userStore.userinfo?.username !== adminUserName
+            ">
             <img class="button-icon" src="./images/delete.png" />
             <span>删除</span>
           </el-button>
@@ -66,6 +79,10 @@ import { CirclePlus } from '@element-plus/icons-vue'
 import { dayjs, ElMessage, ElMessageBox } from 'element-plus'
 import Operate from './Operate/Operate.vue'
 import type { IOperateType, IUser } from './Operate/const'
+import { adminUserName } from './const'
+import { useUserStore } from '@/stores/user'
+
+const userStore = useUserStore()
 
 // 筛选区
 const filterData = ref({

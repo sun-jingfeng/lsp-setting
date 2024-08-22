@@ -26,11 +26,17 @@
           <el-button
             type="primary"
             link
-            @click="operateAuthority(row.roleId ?? '', row.authoritiesList ?? [])">
+            @click="
+              operateAuthority(row.roleId ?? '', row.roleName ?? '', row.authoritiesList ?? [])
+            ">
             <img class="button-icon" src="./images/branch.png" />
             <span>权限配置</span>
           </el-button>
-          <el-button type="danger" link @click="deleteRole(row.roleId!, row.roleName)">
+          <el-button
+            type="danger"
+            link
+            @click="deleteRole(row.roleId!, row.roleName)"
+            :disabled="row.roleName === adminRoleName">
             <img class="button-icon" src="./images/delete.png" />
             <span>删除</span>
           </el-button>
@@ -48,6 +54,7 @@
   <Authority
     v-if="showAuthority"
     :roleId="currentRoleId"
+    :roleName="currentRoleName"
     :initAuthority="initAuthority"
     @closeAuthority="closeAuthority" />
 </template>
@@ -62,6 +69,7 @@ import { dayjs, ElMessage, ElMessageBox } from 'element-plus'
 import Operate from './Operate/Operate.vue'
 import type { IRole } from './Operate/const'
 import Authority from './Authority/Authority.vue'
+import { adminRoleName } from './const'
 
 // 列表
 const total = ref(0)
@@ -101,9 +109,11 @@ const closeOperate = (refresh = false) => {
 // 权限配置
 const showAuthority = ref(false)
 const currentRoleId = ref('')
+const currentRoleName = ref('')
 const initAuthority = ref<string[]>([])
-const operateAuthority = (roleId: string, i_initAuthority: string[]) => {
+const operateAuthority = (roleId: string, roleName: string, i_initAuthority: string[]) => {
   currentRoleId.value = roleId
+  currentRoleName.value = roleName
   initAuthority.value = i_initAuthority
   showAuthority.value = true
 }

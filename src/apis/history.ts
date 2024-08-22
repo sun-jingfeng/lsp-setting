@@ -144,7 +144,7 @@ export const addHistoryApi = (data: {
   disasterTags: string[]
 }) => {
   data.radarProducts = data.radarProducts.map(item => {
-    const reg = /^same-(.*)$/
+    const reg = /^(\d+)-.*$/
     if (reg.test(item)) {
       return item.match(reg)?.[1] ?? ''
     } else {

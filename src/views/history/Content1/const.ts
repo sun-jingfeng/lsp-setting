@@ -156,49 +156,125 @@ export const radarProductOptions: IRadarOptions = [
     label: '强对流产品',
     children: [
       {
-        label: '龙卷涡旋特征V1.0',
-        value: '3000'
-      },
-      {
-        label: '龙卷涡旋特征V2.0',
-        value: '3010'
-      },
-      {
-        label: '龙卷碎片特征V1.0',
-        value: '3020'
-      },
-      {
-        label: '龙卷碎片特征V2.0',
-        value: '3030'
-      },
-      {
-        label: 'ROSE-UAM产品',
+        label: '中气旋 M',
         children: [
           {
-            label: '下击暴流 Downburst - ROSE',
-            value: '3040'
+            label: '中气旋 M - 按旋转速度v1.0',
+            value: '3000'
+          },
+          {
+            label: '中气旋 M - 按旋转速度v2.0',
+            value: '3010'
+          },
+          {
+            label: '中气旋 M - 按涡度',
+            value: '3030'
+          },
+          {
+            label: '中气旋 M - ROSE',
+            value: '3050'
+          }
+        ]
+      },
+      {
+        label: '龙卷涡旋特征 TVS',
+        children: [
+          {
+            label: '龙卷涡旋特征 TVS - v1.0',
+            value: '3000-2'
+          },
+          {
+            label: '龙卷涡旋特征 TVS - v2.0',
+            value: '3010-2'
           },
           {
             label: '龙卷涡旋特征 TVS - ROSE',
             value: '3041'
+          }
+        ]
+      },
+      {
+        label: '冰雹 Hail',
+        children: [
+          {
+            label: '冰雹 Hail - 按冰雹概率v1.0',
+            value: '3000-3'
           },
+          {
+            label: '冰雹 Hail - 按冰雹概率v2.0',
+            value: '3010-3'
+          },
+
+          {
+            label: '冰雹 Hail - 按尺寸',
+            value: '3030-2'
+          },
+
           {
             label: '冰雹 Hail - ROSE',
             value: '3042'
+          }
+        ]
+      },
+      {
+        label: '下击暴流 Downburst',
+        children: [
+          {
+            label: '下击暴流 Downburst - 按多参量v1.0',
+            value: '3000-4'
+          },
+          {
+            label: '下击暴流 Downburst - 按多参量v2.0',
+            value: '3010-4'
+          },
+          {
+            label: '下击暴流 Downburst - 按散度',
+            value: '3030-3'
+          },
+          {
+            label: '下击暴流 Downburst - ROSE',
+            value: '3040'
+          }
+        ]
+      },
+      {
+        label: '风暴追踪 STI',
+        children: [
+          {
+            label: '风暴追踪 STI - v1.0',
+            value: '3000-5'
+          },
+          {
+            label: '风暴追踪 STI - v2.0',
+            value: '3010-5'
+          }
+        ]
+      },
+      {
+        label: '龙卷碎片特征',
+        children: [
+          {
+            label: '龙卷碎片特征 TDS - v1.0',
+            value: '3020'
+          },
+          {
+            label: '龙卷碎片特征 TDS - v2.0',
+            value: '3030-4'
+          }
+        ]
+      },
+      {
+        label: '短时强降水 HR',
+        children: [
+          {
+            label: '短时强降水 HR - V3',
+            value: '2020-2'
           },
           {
             label: '短时强降水 HR - ROSE',
             value: '3043'
           }
         ]
-      },
-      {
-        label: '短强降水V3产品',
-        value: 'same-2020'
-      },
-      {
-        label: '中气旋 - ROSE',
-        value: '3050'
       },
       {
         label: '阵风锋识别',
@@ -242,5 +318,73 @@ export const radarProductOptions: IRadarOptions = [
         ]
       }
     ]
+  }
+]
+
+// 给小爽的映射表，她需要知道每个编号对应的产品是什么
+const mapList: { label: string; value: string }[] = [
+  {
+    label: '1h累积降水 OHP - V3',
+    value: '2020'
+  },
+  {
+    label: '短时强降水 HR - V3',
+    value: '2020-2'
+  },
+  {
+    label: '中气旋 M - 按旋转速度v1.0',
+    value: '3000'
+  },
+  {
+    label: '龙卷涡旋特征 TVS - v1.0',
+    value: '3000-2'
+  },
+  {
+    label: '冰雹 Hail - 按冰雹概率v1.0',
+    value: '3000-3'
+  },
+  {
+    label: '下击暴流 Downburst - 按多参量v1.0',
+    value: '3000-4'
+  },
+  {
+    label: '风暴追踪 STI - v1.0',
+    value: '3000-5'
+  },
+  {
+    label: '中气旋 M - 按旋转速度v2.0',
+    value: '3010'
+  },
+  {
+    label: '龙卷涡旋特征 TVS - v2.0',
+    value: '3010-2'
+  },
+  {
+    label: '冰雹 Hail - 按冰雹概率v2.0',
+    value: '3010-3'
+  },
+  {
+    label: '下击暴流 Downburst - 按多参量v2.0',
+    value: '3010-4'
+  },
+  {
+    label: '风暴追踪 STI - v2.0',
+    value: '3010-5'
+  },
+  {
+    label: '中气旋 M - 按涡度',
+    value: '3030'
+  },
+  {
+    label: '冰雹 Hail - 按尺寸',
+    value: '3030-2'
+  },
+  {
+    label: '下击暴流 Downburst - 按散度',
+    value: '3030-3'
+  },
+  {
+    label: '龙卷碎片特征 TDS - v2.0',
+    value: '3030-4'
   }
 ]

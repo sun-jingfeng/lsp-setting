@@ -40,7 +40,7 @@
           </template>
         </li>
         <li class="right">
-          <el-button type="primary" @click="getUsersList">查询</el-button>
+          <el-button type="primary" @click="getDataList">查询</el-button>
           <el-button type="warning" @click="resetFilter">重置</el-button>
         </li>
       </ul>
@@ -72,28 +72,26 @@
         <el-table-column label="个例开始时间" align="center" width="120">
           <template #default="{ row }: { row: IMonitor }">
             <span>{{
-              (row.orderSubmitTime && dayjs(row.orderSubmitTime).format(dateFormat2)) || ''
+              (row.caseStartTime && dayjs(row.caseStartTime).format(dateFormat2)) || ''
             }}</span>
           </template>
         </el-table-column>
         <el-table-column label="个例结束时间" align="center" width="120">
           <template #default="{ row }: { row: IMonitor }">
-            <span>{{
-              (row.orderSubmitTime && dayjs(row.orderSubmitTime).format(dateFormat2)) || ''
-            }}</span>
+            <span>{{ (row.caseEndTime && dayjs(row.caseEndTime).format(dateFormat2)) || '' }}</span>
           </template>
         </el-table-column>
         <el-table-column label="生产开始时间" align="center" width="120">
           <template #default="{ row }: { row: IMonitor }">
             <span>{{
-              (row.orderSubmitTime && dayjs(row.orderSubmitTime).format(dateFormat2)) || ''
+              (row.productionStartTime && dayjs(row.productionStartTime).format(dateFormat2)) || ''
             }}</span>
           </template>
         </el-table-column>
         <el-table-column label="生产结束时间" align="center" width="120">
           <template #default="{ row }: { row: IMonitor }">
             <span>{{
-              (row.orderSubmitTime && dayjs(row.orderSubmitTime).format(dateFormat2)) || ''
+              (row.productionEndTime && dayjs(row.productionEndTime).format(dateFormat2)) || ''
             }}</span>
           </template>
         </el-table-column>
@@ -106,8 +104,18 @@
         </el-table-column>
         <el-table-column label="进度" align="center" width="160">
           <template #default="{ row }: { row: IMonitor }">
-            <span v-if="(row.progress ?? 0) >= 100">完成</span>
+            <span v-if="(row.progress ?? 0) >= 100">{{
+              row.progress === 404 ? '暂无数据' : '完成'
+            }}</span>
             <el-progress v-else :percentage="row.progress" />
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" width="100" align="center">
+          <template #default="{ row }: { row: IMonitor }">
+            <el-button type="danger" link @click="deleteData(row.monitorId!)">
+              <img class="button-icon" src="./images/delete.png" />
+              <span>删除</span>
+            </el-button>
           </template>
         </el-table-column>
       </template>
@@ -139,11 +147,11 @@
 import type { IPickResponse } from '@/common/axios'
 import { dateFormat1, dateFormat2 } from '@/common/date'
 import { getLabel } from '@/components/Layout/Navigation/const'
-import { dayjs } from 'element-plus'
+import { dayjs, ElMessage, ElMessageBox } from 'element-plus'
 import type { IBusiness, IMonitor } from './const'
 import { businessOptions, initFilterData } from './const'
 import { getStationNoOptionsApi } from '@/apis/station'
-import { getDataListApi } from '@/apis/monitor'
+import { deleteDataApi, getDataListApi } from '@/apis/monitor'
 
 // 筛选区
 const filterData = ref(initFilterData())
@@ -159,7 +167,7 @@ const getRadarAreaList = async () => {
 getRadarAreaList()
 const resetFilter = () => {
   filterData.value = initFilterData()
-  getUsersList()
+  getDataList()
 }
 
 // 列表
@@ -169,11 +177,11 @@ const pageSize = ref(10)
 const dataList = ref<IPickResponse<typeof getDataListApi>['records']>()
 const currentBusiness = ref<IBusiness>()
 const loading = ref(false)
-watch([pageNum, pageSize], getUsersList, {
+watch([pageNum, pageSize], getDataList, {
   immediate: true,
   deep: true
 })
-async function getUsersList() {
+async function getDataList() {
   loading.value = true
   try {
     const { data: res } = await getDataListApi({
@@ -189,6 +197,29 @@ async function getUsersList() {
   } finally {
     loading.value = false
   }
+}
+
+// 删除
+const deleteData = (monitorId: string) => {
+  ElMessageBox.confirm(`确定删除历史回算：${monitorId} ？`, '删除', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  })
+    .then(async () => {
+      loading.value = true
+      try {
+        await deleteDataApi({ monitorId })
+        loading.value = false
+        getDataList()
+        ElMessage.success('删除历史回算成功！')
+      } catch (error: any) {
+        ElMessage.warning('删除历史回算失败！')
+        loading.value = false
+        console.error(error)
+      }
+    })
+    .catch(() => {})
 }
 </script>
 

@@ -1,7 +1,12 @@
 import { getAuthorityTree } from '@/router'
 import { radarProductOptions } from '@/views/history/Content1/const'
 
-export type IAuthorityTree = { label: string; value?: string; children?: IAuthorityTree }[]
+export type IAuthorityTree = {
+  label: string
+  value?: string
+  disabled?: boolean
+  children?: IAuthorityTree
+}[]
 
 export type ISystem = 'dtscreenSta' | 'lsp-station' | 'Ndtshortwarn' | 'radar3dLSP' | 'lsp-setting'
 

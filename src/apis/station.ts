@@ -122,20 +122,30 @@ export const getStationNoOptionsApi = () => {
     const c_areaList: IAreaList = [{ label: '全部', value: '全部', children: cloneDeep(areaList) }]
     formatAreaList(c_areaList)
     function formatAreaList(i_areaList: IAreaList) {
+      const uselessList: IAreaList = []
       i_areaList.forEach(item => {
         if (item.children) {
           formatAreaList(item.children)
           item.num = item.children.reduce((acc, cur) => acc + (cur.num ?? 0), 0)
         } else {
           const targetRecords = records.filter(item2 => item2.province === item.value)
-          item.num = targetRecords.length
-          item.children = targetRecords.map(item3 => ({
-            label: `${item3.stationName} ${item3.stationNo}`,
-            value: item3.stationNo
-          }))
+          if (targetRecords.length !== 0) {
+            item.num = targetRecords.length
+            item.children = targetRecords.map(item3 => ({
+              label: `${item3.stationName} ${item3.stationNo}`,
+              value: item3.stationNo
+            }))
+          } else {
+            uselessList.push(item)
+          }
         }
         item.label = `${item.label}（${item.num}）`
       })
+      for (let i = i_areaList.length - 1; i >= 0; i--) {
+        if (uselessList.includes(i_areaList[i])) {
+          i_areaList.splice(i, 1)
+        }
+      }
     }
     res.data = c_areaList
     return res

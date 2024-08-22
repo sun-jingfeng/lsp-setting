@@ -31,6 +31,10 @@ watch(
         ElMessage.warning('结束时间不得早于开始时间！')
         dateTimeRange.value = ['', '']
       }
+      if (dayjs(dateTimeRange.value[0]).isSame(dayjs(dateTimeRange.value[1]))) {
+        ElMessage.warning('开始时间和结束时间不能相同！')
+        dateTimeRange.value = ['', '']
+      }
     }
   },
   {

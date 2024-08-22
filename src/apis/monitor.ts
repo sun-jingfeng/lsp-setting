@@ -65,3 +65,17 @@ export const getDataListApi = (params: {
     return res
   })
 }
+
+// 删除
+export const deleteDataApi = (params: { monitorId: string }) => {
+  return request<string>({
+    url: '/stationHistory/delete',
+    method: 'get',
+    params: {
+      id: params.monitorId
+    }
+  }).then(res => {
+    // 数据处理
+    return res
+  })
+}

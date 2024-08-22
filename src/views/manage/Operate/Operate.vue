@@ -14,7 +14,11 @@
         :rules="formRules"
         v-loading="loading">
         <el-form-item label="用户名：" prop="username">
-          <el-input v-model="formData.username" clearable placeholder="请输入" />
+          <el-input
+            v-model="formData.username"
+            clearable
+            placeholder="请输入"
+            :disabled="onlyPassword" />
         </el-form-item>
         <el-form-item label="密码：" prop="password">
           <el-input
@@ -25,7 +29,7 @@
             show-password />
         </el-form-item>
         <el-form-item label="角色类型：" prop="roleId">
-          <el-select v-model="formData.roleId" clearable>
+          <el-select v-model="formData.roleId" clearable :disabled="onlyPassword">
             <el-option
               v-for="item in rolesList"
               :key="item.roleId"
@@ -52,6 +56,8 @@ import { addOrEditUserApi, sameVerifyApi } from '@/apis/manage'
 import { getRolesListApi } from '@/apis/role'
 import type { IPickResponse } from '@/common/axios'
 import { cloneDeep } from 'lodash'
+import { adminUserName } from '../const'
+import { useUserStore } from '@/stores/user'
 
 type IProps = {
   operateType?: IOperateType
@@ -69,6 +75,8 @@ const props = withDefaults(defineProps<IProps>(), {
 const emit = defineEmits<{
   (e: 'closeOperate', refresh?: boolean): void
 }>()
+
+const userStore = useUserStore()
 
 // 新增/编辑文字描述
 const addOrEdit = computed(() => (props.operateType === 'add' ? '新增' : '编辑'))
@@ -94,6 +102,14 @@ const getRolesList = async () => {
   }
 }
 getRolesList()
+
+// 只能改密码
+const onlyPassword = computed(
+  () =>
+    props.operateType === 'edit' &&
+    (props.initFormData.username === adminUserName ||
+      userStore.userinfo?.username !== adminUserName)
+)
 
 // 表单数据
 const formData = ref<IUser>(cloneDeep(props.initFormData))
@@ -138,11 +154,11 @@ const onSubmit = () => {
       loading.value = true
       try {
         await addOrEditUserApi(props.operateType, formData.value)
-        ElMessage.success(`${addOrEdit.value}台站成功！`)
+        ElMessage.success(`${addOrEdit.value}用户成功！`)
         closeOperate(true)
       } catch (error: any) {
         console.error(error)
-        ElMessage.warning(error.message ?? `${addOrEdit.value}台站失败！`)
+        ElMessage.warning(error.message ?? `${addOrEdit.value}用户失败！`)
       } finally {
         loading.value = false
       }

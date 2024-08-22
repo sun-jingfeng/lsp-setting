@@ -94,7 +94,7 @@ export function getAllAuthoritiesApi(params: { system: ISystem }) {
     }
   }).then(res => {
     try {
-      res.data = JSON.parse(res.data as any as string)
+      res.data = JSON.parse((res as any).data.permissions)
     } catch (error) {
       res.data = []
     }

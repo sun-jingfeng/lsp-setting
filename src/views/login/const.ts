@@ -1,4 +1,4 @@
-export const tokenKey = 'hn_token'
+export const tokenKey = 'ls_token'
 
 export const loginPath = '/login'
 

@@ -108,11 +108,11 @@ const onSubmit = () => {
       loading.value = true
       try {
         await addRoleApi(formData.value)
-        ElMessage.success(`${addOrEdit.value}台站成功！`)
+        ElMessage.success(`${addOrEdit.value}角色成功！`)
         closeOperate(true)
       } catch (error: any) {
         console.error(error)
-        ElMessage.warning(error.message ?? `${addOrEdit.value}台站失败！`)
+        ElMessage.warning(error.message ?? `${addOrEdit.value}角色失败！`)
       } finally {
         loading.value = false
       }
