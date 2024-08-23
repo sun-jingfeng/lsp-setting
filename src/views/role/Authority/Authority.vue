@@ -12,12 +12,18 @@
         show-checkbox
         node-key="value"
         :default-checked-keys="props.initAuthority"
-        :default-expanded-keys="['全部']"
+        :default-expanded-keys="[treeData?.[0].value ?? '']"
         v-loading="loading" />
       <template #footer>
         <div class="dialog-footer">
           <el-button type="warning" @click="closeAuthority()">取消</el-button>
-          <el-button type="primary" :loading="loading" @click="editRole">保存</el-button>
+          <el-button
+            type="primary"
+            :loading="loading"
+            @click="editRole"
+            :disabled="props.roleName === adminRoleName"
+            >保存</el-button
+          >
         </div>
       </template>
     </el-dialog>
@@ -26,10 +32,8 @@
 
 <script setup lang="ts">
 import { ElMessage, type TreeInstance } from 'element-plus'
-import type { IAuthorityTree, ISystem } from './const'
-import { authorityTree } from './const'
-import { editRoleApi, getAllAuthoritiesApi } from '@/apis/role'
-import { cloneDeep } from 'lodash'
+import type { IAuthorityTree } from './const'
+import { addAllAuthoritiesApi, editRoleApi, getAllAuthoritiesApi } from '@/apis/role'
 import { adminRoleName } from '../const'
 
 type IProps = {
@@ -51,27 +55,15 @@ const closeAuthority = (refresh = false) => {
 }
 
 // 权限数据
-const treeData = ref(cloneDeep(authorityTree))
-const getAllAuthorities = () => {
-  ;(['dtscreenSta', 'lsp-station', 'Ndtshortwarn', 'radar3dLSP'] as ISystem[]).forEach(
-    async system => {
-      try {
-        const { data: res } = await getAllAuthoritiesApi({ system })
-        if (res.length) {
-          if (system !== 'lsp-station') {
-            const target = treeData.value.find(item => item.value === system)
-            target && (target.children = res)
-          } else {
-            const target = treeData.value[0]?.children?.find(item => item.value === 'lsp-station')
-              ?.children?.[0]
-            target && (target.children = res)
-          }
-        }
-      } catch (error: any) {
-        console.error(error)
-      }
-    }
-  )
+const treeData = ref<IAuthorityTree>()
+const getAllAuthorities = async () => {
+  try {
+    const { data: res } = await getAllAuthoritiesApi()
+    treeData.value = res
+    adminForbidden(treeData.value)
+  } catch (error: any) {
+    console.error(error)
+  }
 }
 getAllAuthorities()
 
@@ -86,9 +78,18 @@ const adminForbidden = (data: IAuthorityTree) => {
     })
   }
 }
-adminForbidden(treeData.value)
 
 // 管理员自动添加全部权限
+const addAllAuthorities = async () => {
+  try {
+    await addAllAuthoritiesApi({ roleId: props.roleId })
+  } catch (error: any) {
+    console.error(error)
+  }
+}
+if (props.roleName === adminRoleName) {
+  addAllAuthorities()
+}
 
 // 树
 const loading = ref(false)
