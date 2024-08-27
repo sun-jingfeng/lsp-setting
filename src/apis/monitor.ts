@@ -1,6 +1,6 @@
 /* eslint-disable arrow-body-style */
 import { request } from '@/common/axios'
-import { dateFormat2 } from '@/common/date'
+import { dateFormat1, dateFormat2 } from '@/common/date'
 import type { IBusiness, IMonitor } from '@/views/monitor/const'
 import { dayjs } from 'element-plus'
 
@@ -51,8 +51,13 @@ export const getDataListApi = (params: {
           stationNo: item.station_no,
           province: item.province,
           area: item.area,
-          caseStartTime: item.back_begin_time,
-          caseEndTime: item.back_end_time,
+          caseStartTime:
+            (item.back_begin_time &&
+              dayjs(item.back_begin_time).add(8, 'hour').format(dateFormat1)) ||
+            '',
+          caseEndTime:
+            (item.back_end_time && dayjs(item.back_end_time).add(8, 'hour').format(dateFormat1)) ||
+            '',
           productionStartTime: item.begin_date,
           productionEndTime: item.end_date,
           orderSubmitTime: item.commit_date,

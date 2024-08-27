@@ -158,8 +158,14 @@ export const addHistoryApi = (data: {
     data: {
       stationNos: [...data.stations].join(),
       product: data.radarProducts.join(),
-      back_begin_time: dayjs(data.dateTimeRange[0]).set('second', 0).format(dateFormat4),
-      back_end_time: dayjs(data.dateTimeRange[1]).set('second', 0).format(dateFormat4),
+      back_begin_time: dayjs(data.dateTimeRange[0])
+        .subtract(8, 'hour')
+        .set('second', 0)
+        .format(dateFormat4),
+      back_end_time: dayjs(data.dateTimeRange[1])
+        .subtract(8, 'hour')
+        .set('second', 0)
+        .format(dateFormat4),
       disaster_tag_ids: data.disasterTags.join()
     }
   }).then(res => {
