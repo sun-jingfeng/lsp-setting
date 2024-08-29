@@ -93,10 +93,6 @@ export async function getAllAuthoritiesApi() {
       label: '全部',
       value: '全部',
       children: [
-        // {
-        //   label: '首页',
-        //   value: 'dtscreenSta' as ISystem
-        // },
         {
           label: '单站',
           value: 'lsp-station' as ISystem,
@@ -110,6 +106,15 @@ export async function getAllAuthoritiesApi() {
             }
           ]
         },
+        {
+          label: '后台管理',
+          value: 'lsp-setting' as ISystem,
+          children: getAuthorityTree()
+        },
+        {
+          label: '首页',
+          value: 'dtscreenSta' as ISystem
+        }
         // {
         //   label: '单省',
         //   value: 'Ndtshortwarn' as ISystem
@@ -117,12 +122,7 @@ export async function getAllAuthoritiesApi() {
         // {
         //   label: '三维',
         //   value: 'radar3dLSP' as ISystem
-        // },
-        {
-          label: '后台管理',
-          value: 'lsp-setting' as ISystem,
-          children: getAuthorityTree()
-        }
+        // }
       ]
     }
   ]
@@ -134,7 +134,7 @@ export async function getAllAuthoritiesApi() {
     resList.forEach(({ data: res }) => {
       if (res.authorityTree.length) {
         if (res.system !== 'lsp-station') {
-          const target = result.find(item => item.value === res.system)
+          const target = result[0].children?.find(item => item.value === res.system)
           target && (target.children = res.authorityTree)
         } else {
           const target = result[0]?.children?.find(item => item.value === 'lsp-station')
