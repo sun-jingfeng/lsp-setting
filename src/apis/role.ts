@@ -2,9 +2,10 @@
 import { request } from '@/common/axios'
 import { getAuthorityTree } from '@/router'
 import { radarProductOptions } from '@/views/history/Content1/const'
-import type { IAuthorityTree, ISystem } from '@/views/role/Authority/const'
 import type { IRole } from '@/views/role/Operate/const'
 import { cloneDeep } from 'lodash'
+import type { IAllAuthorities } from './role.const'
+import { getDecodeValue, getEncodeValue, type IAuthorityTree, type ISystem } from './role.const'
 
 // export const mockApi = () => {
 //   return request<string>({
@@ -44,22 +45,25 @@ export const getRolesListApi = (params: { pageNum: number; pageSize: number }) =
         } as any) ?? [])
     )
     res.data.records.forEach(item => {
-      let result: any = item.authoritiesList
-      if (result) {
-        try {
-          result = JSON.parse(result as any as string)
-        } catch (error) {
-          result = {}
-        }
-      } else {
+      let result: IAllAuthorities
+      try {
+        result = JSON.parse(item.authoritiesList as any as string)
+      } catch (error) {
         result = {}
       }
-      item.authoritiesList = Object.keys(result)
-        .map(item2 => result[item2])
-        .reduce((acc, cur) => [...acc, ...cur], [] as string[])
+      item.authoritiesList = getAuthoritiesList(result)
     })
     return res
   })
+  function getAuthoritiesList(allAuthorities: IAllAuthorities) {
+    const result: string[] = []
+    Object.keys(allAuthorities).forEach(system => {
+      allAuthorities[system as ISystem]?.forEach(item => {
+        result.push(getEncodeValue(item, system as ISystem))
+      })
+    })
+    return result
+  }
 }
 
 // 验证角色名称是否重复
@@ -143,6 +147,7 @@ export async function getAllAuthoritiesApi() {
         }
       }
     })
+    encodeUnique()
     return { data: result }
   } catch (error) {
     return Promise.reject(error)
@@ -168,6 +173,21 @@ export async function getAllAuthoritiesApi() {
       }
       return res
     })
+  }
+  function encodeUnique() {
+    result[0].children?.forEach(({ value, children }) => {
+      children?.length && recursion(children, value as ISystem)
+    })
+    function recursion(authorityTree: IAuthorityTree, system: ISystem) {
+      authorityTree.forEach(item => {
+        if (item.value) {
+          item.value = getEncodeValue(item.value, system)
+        }
+        if (item.children?.length) {
+          recursion(item.children, system)
+        }
+      })
+    }
   }
 }
 
@@ -197,6 +217,7 @@ export const editRoleApi = async (data: { roleId: string; authoritiesList: strin
           }
         })
     })
+    uncodeUnique(result)
     try {
       result = JSON.stringify(result) as any
     } catch (error) {
@@ -228,6 +249,13 @@ export const editRoleApi = async (data: { roleId: string; authoritiesList: strin
       }
     }
     return false
+  }
+  function uncodeUnique(allAuthorities: IAllAuthorities) {
+    Object.keys(allAuthorities).forEach(system => {
+      allAuthorities[system as ISystem] = allAuthorities[system as ISystem]?.map(value =>
+        getDecodeValue(value, system as ISystem)
+      )
+    })
   }
 }
 

@@ -2,8 +2,8 @@ import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 import Layout from '@/components/Layout/Layout.vue'
 import { CONFIG } from '@/common/const'
 import { loginPath } from '@/views/login/const'
-import type { IAuthorityTree } from '@/views/role/Authority/const'
 import path from 'path-browserify'
+import type { IAuthorityTree } from '@/apis/role.const'
 
 declare module 'vue-router' {
   interface RouteMeta {

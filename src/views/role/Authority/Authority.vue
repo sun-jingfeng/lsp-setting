@@ -32,9 +32,9 @@
 
 <script setup lang="ts">
 import { ElMessage, type TreeInstance } from 'element-plus'
-import type { IAuthorityTree } from './const'
 import { addAllAuthoritiesApi, editRoleApi, getAllAuthoritiesApi } from '@/apis/role'
 import { adminRoleName } from '../const'
+import type { IAuthorityTree } from '@/apis/role.const'
 
 type IProps = {
   roleId: string
