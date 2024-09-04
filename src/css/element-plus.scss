@@ -59,6 +59,10 @@
     --el-text-color-placeholder: var(--g-text-color-3) !important;
     --el-border-color: var(--g-border-color) !important;
     --el-border-color-hover: var(--g-border-color) !important;
+
+    >.el-select__wrapper{
+      --el-fill-color-light: var(--el-fill-color-blank) !important;
+    }
   }
 
   .el-select__selection > .el-select__selected-item > .el-tag.el-tag--info {
@@ -73,6 +77,10 @@
     --el-text-color-placeholder: var(--g-text-color-3) !important;
     --el-border-color: var(--g-border-color) !important;
     --el-border-color-hover: var(--g-border-color) !important;
+
+    >.el-input__wrapper{
+      --el-disabled-bg-color:var(--el-input-bg-color) !important;
+    }
   }
 
   // dialog
@@ -119,7 +127,17 @@
     --el-cascader-tag-background: var(--g-select-tag-bg) !important;
     --el-color-info: var(--g-select-tag-color) !important;
   }
+
+   // checkbox
+   .el-checkbox {
+    .el-checkbox__inner{
+      --el-checkbox-disabled-checked-input-fill: var(--el-checkbox-checked-bg-color) !important;
+      --el-checkbox-disabled-input-fill: var(--el-checkbox-bg-color) !important;
+    }
+  }
 }
+
+
 
 :root.dark {
   // v-loading

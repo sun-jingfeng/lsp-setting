@@ -13,7 +13,7 @@
         label-width="auto"
         :rules="formRules"
         v-loading="loading">
-        <el-form-item label="用户名：" prop="username">
+        <el-form-item label="用户名：" prop="username" :class="{ 'g-disabled': onlyPassword }">
           <el-input
             v-model="formData.username"
             clearable
@@ -28,7 +28,7 @@
             placeholder="请输入"
             show-password />
         </el-form-item>
-        <el-form-item label="角色类型：" prop="roleId">
+        <el-form-item label="角色类型：" prop="roleId" :class="{ 'g-disabled': onlyPassword }">
           <el-select v-model="formData.roleId" clearable :disabled="onlyPassword">
             <el-option
               v-for="item in rolesList"

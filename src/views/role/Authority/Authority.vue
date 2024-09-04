@@ -9,6 +9,7 @@
       <el-tree
         ref="treeRef"
         :data="treeData"
+        :class="{ 'g-disabled': props.roleName === adminRoleName }"
         show-checkbox
         node-key="value"
         :default-checked-keys="props.initAuthority"
